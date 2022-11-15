@@ -1,0 +1,44 @@
+<template>
+  <table
+    class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered"
+  >
+    <thead>
+      <tr class="slds-line-height_reset">
+        <template for:each={columns} for:item="col">
+          <th scope="col" key={col.label}>
+            <div class="slds-truncate" title={col.label}>{col.label}</div>
+          </th>
+        </template>
+      </tr>
+    </thead>
+    <tbody>
+      <template for:each={data} for:item="payment">
+        <tr class="slds-hint-parent" key={payment.link}>
+          <th data-label="Link" scope="row">
+            <div class="slds-truncate" title="Id">
+              <a href={payment.link} tabindex="-1">Id</a>
+            </div>
+          </th>
+          <td data-label="Month">
+            <div class="slds-truncate" title={payment.month}>
+              {payment.month}
+            </div>
+          </td>
+          <td data-label="Year">
+            <div class="slds-truncate" title={payment.year}>{payment.year}</div>
+          </td>
+          <td data-label="Amount">
+            <div class="slds-truncate" title={payment.amount}>
+              ${payment.amount}
+            </div>
+          </td>
+          <td data-label="Status">
+            <div class="slds-truncate" title={payment.status}>
+              {payment.status}
+            </div>
+          </td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+</template>
