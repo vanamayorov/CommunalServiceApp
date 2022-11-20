@@ -13,7 +13,7 @@ public with sharing class PaymentController {
         WHERE Monthly_Bill__r.Communal_Service_User__r.User__c = :userId
       ];
     } catch (Exception e) {
-      throw new AuraHandledException(e.getMessage());
+      throw new CustomException(e.getMessage());
     }
   }
 }

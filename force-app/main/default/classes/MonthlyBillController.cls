@@ -8,7 +8,7 @@ public with sharing class MonthlyBillController {
         FROM Communal_Service_User__c
         WHERE Id = :metersReading.Communal_Service_User__c
         LIMIT 1
-      ][0];
+      ];
 
       Communal_Rates__c communalRate = [
         SELECT
@@ -25,7 +25,7 @@ public with sharing class MonthlyBillController {
           AND Month__c = :metersReading.Month__c
           AND Year__c = :metersReading.Year__c
         LIMIT 1
-      ][0];
+      ];
 
       Monthly_Bill__c monthlyBill = new Monthly_Bill__c(
         Communal_Service_User__c = metersReading.Communal_Service_User__c,
@@ -41,7 +41,7 @@ public with sharing class MonthlyBillController {
       insert monthlyBill;
       return monthlyBill;
     } catch (Exception e) {
-      throw new AuraHandledException(e.getMessage());
+      throw new CustomException(e.getMessage());
     }
   }
 }
