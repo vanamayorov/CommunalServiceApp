@@ -1,5 +1,4 @@
 import { api } from "lwc";
-import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import LightningModal from "lightning/modal";
 import getRegionManagerByUserId from "@salesforce/apex/RegionManagerController.getRegionManagerByUserId";
 import contactManager from "@salesforce/apex/RegionManagerController.contactManager";
@@ -46,14 +45,7 @@ export default class ContactManagerModal extends LightningModal {
           userEmail: res.Email__c
         };
       })
-      .catch((err) => {
-        this._showToaster(
-          "Error",
-          `An error occured
-          Details: ${err.body.message}`,
-          "error"
-        );
-      });
+      .catch((err) => this.closeModal(err));
   }
 
   handleInputChange(event) {
@@ -97,39 +89,15 @@ export default class ContactManagerModal extends LightningModal {
     );
   }
 
-  sendEmail() {
+  async sendEmail() {
     if (this.validateAll()) {
       contactManager({ payload: JSON.stringify(this.contactData) })
-        .then(() => {
-          this._showToaster(
-            "Success",
-            "Letter was successfully sent",
-            "success"
-          );
-        })
-        .catch((err) => {
-          this._showToaster(
-            "Error",
-            `An error occured, leter wasn't sent
-              Details: ${err.body.message}`,
-            "error"
-          );
-        })
-        .finally(() => this.closeModal());
+        .then(() => this.closeModal("success"))
+        .catch((err) => this.closeModal(err));
     }
   }
 
-  closeModal() {
-    this.close();
-  }
-
-  _showToaster(title, message, variant) {
-    this.dispatchEvent(
-      new ShowToastEvent({
-        title,
-        message,
-        variant
-      })
-    );
+  closeModal(res) {
+    this.close(res);
   }
 }
