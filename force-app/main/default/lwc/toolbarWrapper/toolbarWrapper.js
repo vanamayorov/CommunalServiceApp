@@ -3,6 +3,8 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import ContactManagerModal from "c/contactManagerModal";
 
 export default class ToolbarWrapper extends LightningElement {
+  SUCCESS_MODAL_CLOSE = "success";
+  FAILED_MODAL_CLOSE = "failed";
   handleClick() {
     ContactManagerModal.open({
       size: "medium",
@@ -11,12 +13,12 @@ export default class ToolbarWrapper extends LightningElement {
         headerText: "Contact My Manager"
       }
     }).then((res) => {
-      this.handleMessageSent(res);
+      if (res) this.handleMessageSent(res);
     });
   }
 
-  handleMessageSent(res) {
-    if (res === "success") {
+  handleMessageSent({ status, error }) {
+    if (status === this.SUCCESS_MODAL_CLOSE) {
       this.dispatchEvent(
         new ShowToastEvent({
           title: "Success",
@@ -24,12 +26,13 @@ export default class ToolbarWrapper extends LightningElement {
           variant: "success"
         })
       );
-    } else {
+    }
+    if (status === this.FAILED_MODAL_CLOSE) {
       this.dispatchEvent(
         new ShowToastEvent({
           title: "Error",
           message: `An error occured, leter wasn't sent
-        Details: ${res?.body?.message}`,
+        Details: ${error?.body?.message}`,
           variant: "error"
         })
       );

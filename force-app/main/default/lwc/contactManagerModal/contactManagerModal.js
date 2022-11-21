@@ -17,8 +17,7 @@ const FORMATS = [
   "link",
   "clean",
   "table",
-  "header",
-  "color"
+  "header"
 ];
 
 export default class ContactManagerModal extends LightningModal {
@@ -54,9 +53,6 @@ export default class ContactManagerModal extends LightningModal {
       ...this.contactData,
       [key]: event.target.value
     };
-    if (key === "subject") {
-      this.validateInputs();
-    }
     if (key === "message") {
       this.validateTextarea();
     }
@@ -92,8 +88,8 @@ export default class ContactManagerModal extends LightningModal {
   async sendEmail() {
     if (this.validateAll()) {
       contactManager({ payload: JSON.stringify(this.contactData) })
-        .then(() => this.closeModal("success"))
-        .catch((err) => this.closeModal(err));
+        .then(() => this.closeModal({ status: "success" }))
+        .catch((err) => this.closeModal({ status: "failed", error: err }));
     }
   }
 
