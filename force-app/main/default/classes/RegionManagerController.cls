@@ -18,13 +18,13 @@ public with sharing class RegionManagerController {
   @AuraEnabled
   public static void contactManager(String payload) {
     try {
-      Map<String, Object> payloadMap = (Map<String, Object>) JSON.deserializeUntyped(
+      Map<String, String> payloadMap = (Map<String, String>) JSON.deserializeUntyped(
         payload
       );
-      String managerEmail = (String) payloadMap.get('managerEmail');
-      String message = (String) payloadMap.get('message');
-      String subject = (String) payloadMap.get('subject');
-      String userEmail = (String) payloadMap.get('userEmail');
+      String managerEmail = payloadMap.get('managerEmail');
+      String message = payloadMap.get('message');
+      String subject = payloadMap.get('subject');
+      String userEmail = payloadMap.get('userEmail');
       EmailService.sendEmail(userEmail, managerEmail, subject, message);
     } catch (Exception e) {
       throw new CustomException(e.getMessage());

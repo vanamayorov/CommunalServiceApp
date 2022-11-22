@@ -1,4 +1,3 @@
-import { api } from "lwc";
 import LightningModal from "lightning/modal";
 import getRegionManagerByUserId from "@salesforce/apex/RegionManagerController.getRegionManagerByUserId";
 import contactManager from "@salesforce/apex/RegionManagerController.contactManager";
@@ -21,7 +20,6 @@ const FORMATS = [
 ];
 
 export default class ContactManagerModal extends LightningModal {
-  @api content;
   contactData = {
     managerEmail: "",
     message: "",
@@ -32,10 +30,6 @@ export default class ContactManagerModal extends LightningModal {
   validity = true;
 
   connectedCallback() {
-    this.fetchManagerEmail();
-  }
-
-  fetchManagerEmail() {
     getRegionManagerByUserId({ userId: Id })
       .then((res) => {
         this.contactData = {
@@ -85,7 +79,7 @@ export default class ContactManagerModal extends LightningModal {
     );
   }
 
-  async sendEmail() {
+  sendEmail() {
     if (this.validateAll()) {
       contactManager({ payload: JSON.stringify(this.contactData) })
         .then(() => this.closeModal({ status: "success" }))
