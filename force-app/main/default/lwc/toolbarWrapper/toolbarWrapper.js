@@ -8,10 +8,7 @@ export default class ToolbarWrapper extends LightningElement {
   handleClick() {
     ContactManagerModal.open({
       size: "medium",
-      description: "Contact Manager Modal",
-      content: {
-        headerText: "Contact My Manager"
-      }
+      description: "Contact Manager Modal"
     }).then((res) => {
       if (res) this.handleMessageSent(res);
     });
