@@ -12,10 +12,16 @@
         </h2>
       </div>
       <lightning-button-group>
+        <lightning-button
+          label="Pay for Month"
+          onclick={openPaymentModal}
+          disabled={userHasDebt}
+        >
+        </lightning-button>
         <lightning-button label="Change Address"></lightning-button>
         <lightning-button
           label="Contact Manager"
-          onclick={handleClick}
+          onclick={openContactManagerModal}
           aria-haspopup="modal"
         >
         </lightning-button>

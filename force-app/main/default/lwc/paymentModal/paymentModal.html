@@ -1,0 +1,32 @@
+<template>
+  <lightning-modal-header label={content.headerText}></lightning-modal-header>
+  <lightning-modal-body>
+    <lightning-layout> </lightning-layout>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <lightning-progress-indicator
+      current-step={currentStep}
+      type="base"
+      variant="base"
+    >
+      <template for:each={steps} for:item="step">
+        <lightning-progress-step
+          label={step.label}
+          value={step.value}
+          key={step.value}
+        ></lightning-progress-step>
+      </template>
+    </lightning-progress-indicator>
+    <lightning-button-group class="slds-m-top_x-small">
+      <lightning-button
+        label="Previous"
+        onclick={handlePrevStep}
+      ></lightning-button>
+      <lightning-button
+        label="Next"
+        variant="brand"
+        onclick={handleNextStep}
+      ></lightning-button>
+    </lightning-button-group>
+  </lightning-modal-footer>
+</template>

@@ -1,11 +1,27 @@
-import { LightningElement } from "lwc";
+import { LightningElement, wire } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import ContactManagerModal from "c/contactManagerModal";
+import PaymentModal from "c/paymentModal";
+import userHasDebt from "@salesforce/apex/CommunalServiceUserController.userHasDebt";
+import Id from "@salesforce/user/Id";
 
 export default class ToolbarWrapper extends LightningElement {
   SUCCESS_MODAL_CLOSE = "success";
   FAILED_MODAL_CLOSE = "failed";
-  handleClick() {
+  userHasDebt = false;
+
+  @wire(userHasDebt, { userId: Id })
+  wiredUserHasDebt(value) {
+    const { data, error } = value;
+    if (data) {
+      this.userHasDebt = !data.result;
+    }
+    if (error) {
+      console.log(error);
+    }
+  }
+
+  openContactManagerModal() {
     ContactManagerModal.open({
       size: "medium",
       description: "Contact Manager Modal",
@@ -14,6 +30,15 @@ export default class ToolbarWrapper extends LightningElement {
       }
     }).then((res) => {
       if (res) this.handleMessageSent(res);
+    });
+  }
+
+  openPaymentModal() {
+    PaymentModal.open({
+      size: "small",
+      content: {
+        headerText: "Make Payments"
+      }
     });
   }
 
