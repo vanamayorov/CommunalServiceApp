@@ -18,6 +18,10 @@ public with sharing class MetersReadingsNotificationController implements Schedu
       FROM Communal_Service_User__c
     ];
 
-    CommunalServiceUserController.notifyUsers(communalServiceUsers);
+    List<Communal_Service_User__c> usersWithUnfilledReadings = CommunalServiceUserController.getUsersWithUnfilledReadings(
+      communalServiceUsers
+    );
+
+    CommunalServiceUserController.notifyUsers(usersWithUnfilledReadings);
   }
 }
