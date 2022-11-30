@@ -24,6 +24,7 @@ public with sharing class CommunalServiceUserController {
           Left_To_Pay__c,
           Year__c,
           Month__c,
+          CurrencyIsoCode,
           Communal_Service_User__r.User__c
         FROM Monthly_Bill__c
         WHERE Communal_Service_User__r.User__c = :userId AND Left_To_Pay__c > 0

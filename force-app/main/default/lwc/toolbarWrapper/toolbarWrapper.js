@@ -32,10 +32,7 @@ export default class ToolbarWrapper extends LightningElement {
 
   openPaymentModal() {
     PaymentModal.open({
-      size: "small",
-      content: {
-        headerText: "Make Payments"
-      }
+      size: "small"
     });
   }
 

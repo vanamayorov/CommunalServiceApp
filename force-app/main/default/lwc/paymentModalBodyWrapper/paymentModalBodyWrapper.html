@@ -1,0 +1,26 @@
+<template>
+  <template if:true={firstStepScreen}>
+    <c-payment-modal-first-screen
+      steps={steps}
+      current-step={step}
+      onhandlenextstep={handleFirstStep}
+    ></c-payment-modal-first-screen>
+  </template>
+  <template if:true={secondStepScreen}>
+    <c-payment-modal-second-screen
+      steps={steps}
+      current-step={step}
+      onhandlenextstep={handleSecondStep}
+      bill={chosenBill}
+    ></c-payment-modal-second-screen>
+  </template>
+  <template if:true={thirdStepScreen}>
+    <c-payment-modal-third-screen
+      steps={steps}
+      current-step={step}
+      payment-info={paymentInfo}
+      onhandlefinish={handleFinish}
+      ongoback={handleGoBack}
+    ></c-payment-modal-third-screen>
+  </template>
+</template>

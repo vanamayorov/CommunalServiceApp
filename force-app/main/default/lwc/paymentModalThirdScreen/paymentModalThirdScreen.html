@@ -1,0 +1,85 @@
+<template>
+  <lightning-modal-body>
+    <template if:true={paymentSuccessfull}>
+      <div
+        class="slds-grid slds-grid_vertical-align-center slds-grid_align-center"
+      >
+        <template if:true={paymentStatusOk}>
+          <lightning-icon
+            icon-name="action:approval"
+            alternative-text="Approved"
+            title="Approved"
+          ></lightning-icon>
+          <h2 class="message slds-m-left_small">
+            Successfully paid! <br />
+            Check out your email for payment invoice!
+          </h2>
+        </template>
+        <template if:false={paymentStatusOk}>
+          <lightning-icon
+            icon-name="action:close"
+            alternative-text="Error"
+            title="Error occured"
+          ></lightning-icon>
+          <h2 class="message slds-m-left_small">
+            Failed to pay :( <br />
+            {paymentInfo.payload.errorMsg} <br />
+            Check out your email for payment details!
+          </h2>
+        </template>
+      </div>
+    </template>
+    <template if:false={paymentSuccessfull}>
+      <div
+        class="slds-grid slds-grid_vertical-align-center slds-grid_align-center"
+      >
+        <lightning-icon
+          icon-name="action:close"
+          alternative-text="Error"
+          title="Error occured"
+        ></lightning-icon>
+        <h2 class="message slds-m-left_small">
+          Some error occured :( <br />
+          {paymentInfo.payload.body.message}
+        </h2>
+      </div>
+    </template>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <lightning-progress-indicator
+      current-step={currentStep}
+      type="base"
+      variant="base"
+    >
+      <template for:each={steps} for:item="step">
+        <lightning-progress-step
+          label={step.label}
+          value={step.value}
+          key={step.value}
+        >
+        </lightning-progress-step>
+      </template>
+    </lightning-progress-indicator>
+
+    <lightning-button-group class="slds-m-top_x-small">
+      <template if:false={paymentSuccessfull}>
+        <lightning-button
+          label="Try again"
+          variant="brand-outline"
+          onclick={tryAgain}
+        >
+        </lightning-button>
+      </template>
+      <template if:false={paymentStatusOk}>
+        <lightning-button
+          label="Try again"
+          variant="brand-outline"
+          onclick={tryAgain}
+        >
+        </lightning-button>
+      </template>
+      <lightning-button label="Finish" variant="brand" onclick={handleFinish}>
+      </lightning-button>
+    </lightning-button-group>
+  </lightning-modal-footer>
+</template>

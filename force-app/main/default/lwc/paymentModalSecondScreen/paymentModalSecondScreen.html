@@ -1,0 +1,104 @@
+<template>
+  <lightning-modal-body>
+    <c-chosen-bill-table bill={bill}></c-chosen-bill-table>
+
+    <div class="slds-grid slds-gutters slds-wrap">
+      <div class="slds-col slds-size_6-of-12">
+        <div class="slds-text-heading_medium">Credit card info</div>
+        <div>
+          <div>
+            <lightning-input
+              type="text"
+              name="cardNumber"
+              placeholder="**** **** **** ****"
+              maxlength="19"
+              minlength="19"
+              label="Card Number"
+              value={cardNumber}
+              onchange={handleInput}
+              required
+            >
+            </lightning-input>
+            <lightning-input
+              type="password"
+              name="cvv"
+              label="Security Code"
+              placeholder="•••"
+              maxlength="3"
+              min-length="3"
+              pattern="[0-9]{3}"
+              onchange={handleInput}
+              required
+            >
+            </lightning-input>
+          </div>
+          <div>
+            <lightning-input
+              type="text"
+              name="owner"
+              label="Name on Card"
+              maxlength="50"
+              min-length="5"
+              placeholder="Name Surname"
+              pattern="[a-zA-Z]+\s[a-zA-Z]+"
+              onchange={handleInput}
+              required
+            >
+            </lightning-input>
+            <lightning-input
+              type="text"
+              name="expiration"
+              label="Expiration"
+              placeholder="Month / Year"
+              pattern="(?:0[1-9]|1[0-2])/[0-9]{2}"
+              maxlength="5"
+              value={expiration}
+              onchange={handleInput}
+              required
+            >
+            </lightning-input>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col slds-size_6-of-12">
+        <div class="slds-text-heading_medium">Enter Amount</div>
+        <lightning-input
+          type="number"
+          formatter="currency"
+          name="amount"
+          max={bill.Left_To_Pay__c}
+          min="1"
+          label="Amount"
+          onchange={handleInput}
+          required
+        >
+        </lightning-input>
+      </div>
+    </div>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <lightning-progress-indicator
+      current-step={currentStep}
+      type="base"
+      variant="base"
+    >
+      <template for:each={steps} for:item="step">
+        <lightning-progress-step
+          label={step.label}
+          value={step.value}
+          key={step.value}
+        >
+        </lightning-progress-step>
+      </template>
+    </lightning-progress-indicator>
+    <lightning-button-group class="slds-m-top_x-small">
+      <lightning-button
+        label="Next"
+        variant="brand"
+        onclick={handleNextStep}
+        disabled={nextBtnDisabled}
+      >
+      </lightning-button>
+    </lightning-button-group>
+  </lightning-modal-footer>
+</template>

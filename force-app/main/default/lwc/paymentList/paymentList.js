@@ -1,36 +1,70 @@
 import { LightningElement, wire } from "lwc";
 import getPayments from "@salesforce/apex/PaymentController.getPayments";
+import { subscribe, MessageContext } from "lightning/messageService";
+import UPDATE_PAYMENTSLIST_CHANNEL from "@salesforce/messageChannel/Update_PaymentsList__c";
 import Id from "@salesforce/user/Id";
 
+const COLUMNS = [
+  { label: "Id", fieldName: "id" },
+  { label: "Month", fieldName: "month" },
+  { label: "Year", fieldName: "year" },
+  { label: "Amount", fieldName: "amount" },
+  { label: "Date", fieldName: "date" },
+  { label: "Status", fieldName: "status" }
+];
+
 export default class PaymentList extends LightningElement {
-  columns = [
-    { label: "Id", fieldName: "id" },
-    { label: "Month", fieldName: "month" },
-    { label: "Year", fieldName: "year" },
-    { label: "Amount", fieldName: "amount" },
-    { label: "Status", fieldName: "status" }
-  ];
+  columns = COLUMNS;
+  subscription = null;
   isLoading = true;
   data = [];
 
-  @wire(getPayments, { userId: Id })
-  wiredPayments({ data, error }) {
-    if (error) {
-      this.data = [];
-      this.isLoading = false;
-    }
+  connectedCallback() {
+    this.fetchPayments();
+    this.subscribeToMessageChannel();
+  }
 
-    if (data) {
-      this.data = data.map((payment) => ({
-        id: `/lightning/r/Payment__c/${payment.Id}/view`,
-        month: payment.Monthly_Bill__r.Month__c,
-        year: payment.Monthly_Bill__r.Year__c,
-        amount: payment.Amount__c,
-        status: payment.Status__c,
-        isSuccess: payment.Status__c === "Successfully paid"
-      }));
-      this.isLoading = false;
-    }
+  @wire(MessageContext)
+  messageContext;
+  subscribeToMessageChannel() {
+    this.subscription = subscribe(
+      this.messageContext,
+      UPDATE_PAYMENTSLIST_CHANNEL,
+      () => {
+        this.fetchPayments();
+      }
+    );
+  }
+
+  fetchPayments() {
+    getPayments({ userId: Id })
+      .then((data) => {
+        this.data = data.map((payment) => ({
+          id: `/lightning/r/Payment__c/${payment.Id}/view`,
+          month: payment.Monthly_Bill__r.Month__c,
+          year: payment.Monthly_Bill__r.Year__c,
+          amount: payment.Amount__c,
+          isoCode: payment.CurrencyIsoCode,
+          date: this.getFormattedTime(payment.Date__c),
+          status: payment.Status__c
+        }));
+      })
+      .catch(() => {
+        this.data = [];
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
+  }
+
+  getFormattedTime(time) {
+    return `${new Date(time).getHours()}:${
+      new Date(time).getMinutes() < 10
+        ? `0${new Date(time).getMinutes()}`
+        : new Date(time).getMinutes()
+    } ${new Date(time).getDate()}.${new Date(time).getMonth()}.${new Date(
+      time
+    ).getFullYear()}`;
   }
 
   get paymentsListIsFilled() {

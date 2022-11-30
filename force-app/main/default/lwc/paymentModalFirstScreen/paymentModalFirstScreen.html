@@ -1,0 +1,45 @@
+<template>
+  <lightning-modal-body>
+    <lightning-combobox
+      class="slds-m-bottom_x-small"
+      name="unpaidBills"
+      label="Choose Monthly Bill"
+      value={unpaidBillValue}
+      placeholder="Choose Monthly Bill"
+      options={optionsForSelect}
+      onchange={handleSelectChange}
+    >
+    </lightning-combobox>
+
+    <div class="bill-tile">
+      <template if:true={chosenBillSet}>
+        <c-chosen-bill-table bill={chosenBill}></c-chosen-bill-table>
+      </template>
+    </div>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <lightning-progress-indicator
+      current-step={currentStep}
+      type="base"
+      variant="base"
+    >
+      <template for:each={steps} for:item="step">
+        <lightning-progress-step
+          label={step.label}
+          value={step.value}
+          key={step.value}
+        >
+        </lightning-progress-step>
+      </template>
+    </lightning-progress-indicator>
+    <lightning-button-group class="slds-m-top_x-small">
+      <lightning-button
+        label="Next"
+        variant="brand"
+        onclick={handleNextStep}
+        disabled={chosenBillNotSet}
+      >
+      </lightning-button>
+    </lightning-button-group>
+  </lightning-modal-footer>
+</template>

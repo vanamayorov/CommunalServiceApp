@@ -16,7 +16,7 @@
     <lightning-input
       type="text"
       label="Subject"
-      data-id="subject"
+      name="subject"
       value={contactData.subject}
       onchange={handleInputChange}
       required
@@ -24,7 +24,7 @@
     <lightning-input-rich-text
       class="slds-has-error"
       label="Message"
-      data-id="message"
+      name="message"
       value={contactData.message}
       onchange={handleInputChange}
       label-visible

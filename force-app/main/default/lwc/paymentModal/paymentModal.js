@@ -1,37 +1,39 @@
-import { api } from "lwc";
+import { wire } from "lwc";
 import LightningModal from "lightning/modal";
-import getUnpaidMonthlyBills from "@salesforce/apex/CommunalServiceUserController.getUnpaidMonthlyBills";
-import Id from "@salesforce/user/Id";
+import { publish, MessageContext } from "lightning/messageService";
+import UPDATE_PAYMENTSLIST_CHANNEL from "@salesforce/messageChannel/Update_PaymentsList__c";
+
+const STEPS = [
+  { label: "Choose Monthly Bill", value: 0 },
+  { label: "Enter Credentials", value: 1 },
+  { label: "Payment Result", value: 2 }
+];
 
 export default class PaymentModal extends LightningModal {
-  @api content;
-  currentStep = 1;
-  steps = [
-    { label: "Choose Monthly Bill", value: 1 },
-    { label: "Enter Credentials", value: 2 }
-  ];
+  currentStep = 0;
+  steps = STEPS;
 
-  connectedCallback() {
-    this.fetchUnpaidBills();
-  }
-
-  fetchUnpaidBills() {
-    getUnpaidMonthlyBills({ userId: Id })
-      .then((res) => console.log(res))
-      .catch((err) => console.error(err));
-  }
+  @wire(MessageContext)
+  messageContext;
 
   handleNextStep() {
-    return this.currentStep + 1 > this.steps.length
+    return this.currentStep + 1 >= this.steps.length
       ? this.currentStep
       : this.currentStep++;
   }
 
-  handlePrevStep() {
-    if (this.currentStep - 1 < 0) {
-      this.currentStep = 0;
-    } else {
-      this.currentStep--;
-    }
+  handleFinish() {
+    publish(this.messageContext, UPDATE_PAYMENTSLIST_CHANNEL, {
+      status: "updated"
+    });
+    this.close();
+  }
+
+  handleGoBack() {
+    this.currentStep--;
+  }
+
+  get currentStepLabel() {
+    return this.steps[this.currentStep].label;
   }
 }
