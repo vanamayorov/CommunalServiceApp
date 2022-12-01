@@ -26,14 +26,16 @@ public with sharing class PaymentPDFController {
 
     Messaging.EmailFileAttachment attachment = new Messaging.EmailFileAttachment();
     attachment.setContentType('application/pdf');
-    attachment.setFileName('Invoice PDF');
+    attachment.setFileName(
+      System.today().format() + ' Communal Service - Invoice PDF'
+    );
     attachment.body = invoicePDF.getContent();
     attachment.setInline(false);
 
     Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
     mail.setToAddresses(new List<String>{ email });
-    mail.setSubject('Invoice PDF');
-    mail.setHtmlBody('The Invoice PDF');
+    mail.setSubject('Communal Service - Invoice PDF');
+    mail.setHtmlBody('An Invoice PDF from Communal Service');
     mail.setFileAttachments(
       new List<Messaging.EmailFileAttachment>{ attachment }
     );
