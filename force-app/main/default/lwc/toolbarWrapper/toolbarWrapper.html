@@ -27,5 +27,10 @@
         </lightning-button>
       </lightning-button-group>
     </div>
+    <template if:true={error}>
+      <div class="slds-grid slds-grid_align-end slds-text-color_error">
+        Error details: {error.body.message}
+      </div>
+    </template>
   </div>
 </template>

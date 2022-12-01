@@ -38,7 +38,7 @@ export default class ContactManagerModal extends LightningModal {
           userEmail: res.Email__c
         };
       })
-      .catch((err) => this.closeModal(err));
+      .catch((err) => this.closeModal({ status: "failed", error: err }));
   }
 
   handleInputChange(event) {

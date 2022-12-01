@@ -1,21 +1,45 @@
 <template>
   <lightning-modal-body>
-    <lightning-combobox
-      class="slds-m-bottom_x-small"
-      name="unpaidBills"
-      label="Choose Monthly Bill"
-      value={unpaidBillValue}
-      placeholder="Choose Monthly Bill"
-      options={optionsForSelect}
-      onchange={handleSelectChange}
-    >
-    </lightning-combobox>
+    <template if:false={error}>
+      <lightning-combobox
+        class="slds-m-bottom_x-small"
+        name="unpaidBills"
+        label="Choose Monthly Bill"
+        value={unpaidBillValue}
+        placeholder="Choose Monthly Bill"
+        options={optionsForSelect}
+        onchange={handleSelectChange}
+      >
+      </lightning-combobox>
 
-    <div class="bill-tile">
-      <template if:true={chosenBillSet}>
-        <c-chosen-bill-table bill={chosenBill}></c-chosen-bill-table>
-      </template>
-    </div>
+      <div class="bill-tile">
+        <template if:true={chosenBillSet}>
+          <c-chosen-bill-table bill={chosenBill}></c-chosen-bill-table>
+        </template>
+      </div>
+    </template>
+
+    <template if:true={error}>
+      <div class="slds-notify_container slds-is-relative">
+        <div
+          class="slds-notify slds-notify_toast slds-theme_info"
+          role="status"
+        >
+          <span class="slds-assistive-text">error</span>
+          <span
+            class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top"
+          >
+            <lightning-icon
+              icon-name="utility:info"
+              variant="inverse"
+            ></lightning-icon>
+          </span>
+          <div class="slds-notify__content">
+            <h2 class="slds-text-heading_small">{error.body.message}</h2>
+          </div>
+        </div>
+      </div>
+    </template>
   </lightning-modal-body>
   <lightning-modal-footer>
     <lightning-progress-indicator

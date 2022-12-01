@@ -1,4 +1,20 @@
 public with sharing class CommunalServiceUserController {
+  @AuraEnabled
+  public static String getUserEmail(String userId) {
+    try {
+      Communal_Service_User__c user = [
+        SELECT Id, Email__c
+        FROM Communal_Service_User__c
+        WHERE User__c = :userId
+        LIMIT 1
+      ];
+
+      return user.Email__c;
+    } catch (Exception e) {
+      throw new CustomException(e.getMessage());
+    }
+  }
+
   @AuraEnabled(cacheable=true)
   public static Map<String, Boolean> userHasDebt(String userId) {
     try {

@@ -10,6 +10,7 @@ export default class PaymentModalFirstScreen extends LightningElement {
   optionsForSelect = [];
   unpaidBillValue = "";
   chosenBill = {};
+  error = null;
 
   connectedCallback() {
     getUnpaidMonthlyBills({ userId: Id })
@@ -20,7 +21,9 @@ export default class PaymentModalFirstScreen extends LightningElement {
           value: bill.Id
         }));
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        this.error = err;
+      });
   }
 
   handleSelectChange(e) {
@@ -30,19 +33,19 @@ export default class PaymentModalFirstScreen extends LightningElement {
     );
   }
 
-  get chosenBillSet() {
-    return Object.keys(this.chosenBill).length > 0;
-  }
-
-  get chosenBillNotSet() {
-    return !this.chosenBillSet;
-  }
-
   handleNextStep() {
     this.dispatchEvent(
       new CustomEvent("handlenextstep", {
         detail: this.chosenBill
       })
     );
+  }
+
+  get chosenBillSet() {
+    return Object.keys(this.chosenBill).length > 0;
+  }
+
+  get chosenBillNotSet() {
+    return !this.chosenBillSet;
   }
 }

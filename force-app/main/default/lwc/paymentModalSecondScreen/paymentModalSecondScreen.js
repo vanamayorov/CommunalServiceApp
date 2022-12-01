@@ -1,5 +1,7 @@
 import { LightningElement, api } from "lwc";
 import payForMonth from "@salesforce/apex/PaymentController.payForMonth";
+import getUserEmail from "@salesforce/apex/CommunalServiceUserController.getUserEmail";
+import Id from "@salesforce/user/Id";
 
 export default class PaymentModalSecondScreen extends LightningElement {
   @api bill;
@@ -46,12 +48,16 @@ export default class PaymentModalSecondScreen extends LightningElement {
   }
 
   handleNextStep() {
-    const payload = {
-      ...this.credentialsInfo,
-      billId: this.bill.Id
-    };
-
-    payForMonth({ payload: JSON.stringify(payload) })
+    getUserEmail({ userId: Id })
+      .then((email) =>
+        payForMonth({
+          payload: JSON.stringify({
+            ...this.credentialsInfo,
+            billId: this.bill.Id,
+            email
+          })
+        })
+      )
       .then((res) =>
         this.dispatchEvent(
           new CustomEvent("handlenextstep", {

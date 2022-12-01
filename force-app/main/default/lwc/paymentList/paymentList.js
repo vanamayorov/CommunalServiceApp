@@ -1,7 +1,11 @@
 import { LightningElement, wire } from "lwc";
 import getPayments from "@salesforce/apex/PaymentController.getPayments";
-import { subscribe, MessageContext } from "lightning/messageService";
-import UPDATE_PAYMENTSLIST_CHANNEL from "@salesforce/messageChannel/Update_PaymentsList__c";
+import {
+  subscribe,
+  MessageContext,
+  unsubscribe
+} from "lightning/messageService";
+import UPDATE_AFTER_PAYMENT_CHANNEL from "@salesforce/messageChannel/Update_After_Payment__c";
 import Id from "@salesforce/user/Id";
 
 const COLUMNS = [
@@ -29,7 +33,7 @@ export default class PaymentList extends LightningElement {
   subscribeToMessageChannel() {
     this.subscription = subscribe(
       this.messageContext,
-      UPDATE_PAYMENTSLIST_CHANNEL,
+      UPDATE_AFTER_PAYMENT_CHANNEL,
       () => {
         this.fetchPayments();
       }
@@ -62,9 +66,19 @@ export default class PaymentList extends LightningElement {
       new Date(time).getMinutes() < 10
         ? `0${new Date(time).getMinutes()}`
         : new Date(time).getMinutes()
-    } ${new Date(time).getDate()}.${new Date(time).getMonth()}.${new Date(
-      time
-    ).getFullYear()}`;
+    } ${
+      new Date(time).getDate() < 10
+        ? `0${new Date(time).getDate()}`
+        : new Date(time).getDate()
+    }.${
+      new Date(time).getMonth() < 10
+        ? `0${new Date(time).getMonth()}`
+        : new Date(time).getMonth()
+    }.${new Date(time).getFullYear()}`;
+  }
+
+  disconnectedCallback() {
+    unsubscribe(this.subscription);
   }
 
   get paymentsListIsFilled() {

@@ -31,6 +31,7 @@ public with sharing class PaymentController {
       String owner = (String) payloadMap.get('owner');
       Double amount = Double.valueOf((String) payloadMap.get('amount'));
       String billId = (String) payloadMap.get('billId');
+      String email = (String) payloadMap.get('email');
       PaymentServiceResponse paymentServiceResp = PaymentService.paymentSucceded(
         cardNumber,
         cvv,
@@ -50,7 +51,7 @@ public with sharing class PaymentController {
 
       insert payment;
 
-      PaymentPDFController.generatePDF(payment.Id, 'mayorovivankhm@gmail.com');
+      PaymentPDFController.generatePDF(payment.Id, email);
 
       return new Response(
         paymentServiceResp.success,

@@ -1,7 +1,7 @@
 import { wire } from "lwc";
-import LightningModal from "lightning/modal";
 import { publish, MessageContext } from "lightning/messageService";
-import UPDATE_PAYMENTSLIST_CHANNEL from "@salesforce/messageChannel/Update_PaymentsList__c";
+import LightningModal from "lightning/modal";
+import UPDATE_AFTER_PAYMENT_CHANNEL from "@salesforce/messageChannel/Update_After_Payment__c";
 
 const STEPS = [
   { label: "Choose Monthly Bill", value: 0 },
@@ -23,7 +23,7 @@ export default class PaymentModal extends LightningModal {
   }
 
   handleFinish() {
-    publish(this.messageContext, UPDATE_PAYMENTSLIST_CHANNEL, {
+    publish(this.messageContext, UPDATE_AFTER_PAYMENT_CHANNEL, {
       status: "updated"
     });
     this.close();
