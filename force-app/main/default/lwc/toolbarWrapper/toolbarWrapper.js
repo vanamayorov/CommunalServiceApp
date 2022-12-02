@@ -11,6 +11,7 @@ import {
 } from "lightning/empApi";
 import { refreshApex } from "@salesforce/apex";
 import ContactManagerModal from "c/contactManagerModal";
+import ChangeAddressModal from "c/changeAddressModal";
 import PaymentModal from "c/paymentModal";
 import userHasDebt from "@salesforce/apex/CommunalServiceUserController.userHasDebt";
 import UPDATE_AFTER_PAYMENT_CHANNEL from "@salesforce/messageChannel/Update_After_Payment__c";
@@ -66,10 +67,16 @@ export default class ToolbarWrapper extends LightningElement {
 
   openContactManagerModal() {
     ContactManagerModal.open({
-      size: "medium",
+      size: "small",
       description: "Contact Manager Modal"
     }).then((res) => {
       if (res) this.handleMessageSent(res);
+    });
+  }
+
+  openChangeAddressModal() {
+    ChangeAddressModal.open({
+      size: "small"
     });
   }
 

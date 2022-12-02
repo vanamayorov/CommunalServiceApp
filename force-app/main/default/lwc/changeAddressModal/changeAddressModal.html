@@ -1,0 +1,30 @@
+<template>
+  <lightning-modal-header label="Change address"></lightning-modal-header>
+  <lightning-modal-body>
+    <template if:true={userHasDebt}>
+      Unfortunately, You cannot change your address until you pay bills by your
+      current address. <br />
+      Please, navigate to Pay for Month button in Actions row or click a button
+      below.<br />
+      <lightning-button
+        variant="brand"
+        label="Pay Bills"
+        title="Pay Bills"
+        onclick={handlePayBills}
+        class="slds-m-left_x-small"
+      ></lightning-button>
+    </template>
+
+    <template if:false={userHasDebt}>
+      <lightning-combobox
+        name="region"
+        label="Choose region"
+        value={value}
+        placeholder="Select Progress"
+        options={options}
+        onchange={handleChange}
+      ></lightning-combobox>
+    </template>
+  </lightning-modal-body>
+  <lightning-modal-footer></lightning-modal-footer>
+</template>
