@@ -1,4 +1,55 @@
 public with sharing class CommunalServiceUserController {
+  @AuraEnabled
+  public static String getUserEmail(String userId) {
+    try {
+      Communal_Service_User__c user = [
+        SELECT Id, Email__c
+        FROM Communal_Service_User__c
+        WHERE User__c = :userId
+        LIMIT 1
+      ];
+
+      return user.Email__c;
+    } catch (Exception e) {
+      throw new CustomException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static Map<String, Boolean> userHasDebt(String userId) {
+    try {
+      Communal_Service_User__c user = [
+        SELECT Id, User__c, Debt__c
+        FROM Communal_Service_User__c
+        WHERE User__c = :userId
+        LIMIT 1
+      ];
+
+      return new Map<String, Boolean>{ 'result' => user.Debt__c > 0 };
+    } catch (Exception e) {
+      throw new CustomException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled
+  public static List<Monthly_Bill__c> getUnpaidMonthlyBills(String userId) {
+    try {
+      return [
+        SELECT
+          Id,
+          Left_To_Pay__c,
+          Year__c,
+          Month__c,
+          CurrencyIsoCode,
+          Communal_Service_User__r.User__c
+        FROM Monthly_Bill__c
+        WHERE Communal_Service_User__r.User__c = :userId AND Left_To_Pay__c > 0
+      ];
+    } catch (Exception e) {
+      throw new CustomException(e.getMessage());
+    }
+  }
+
   public static List<Messaging.SendEmailResult> notifyUsers(
     List<Communal_Service_User__c> communalServiceUsers
   ) {

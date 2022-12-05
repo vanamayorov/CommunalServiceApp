@@ -38,11 +38,11 @@ export default class ContactManagerModal extends LightningModal {
           userEmail: res.Email__c
         };
       })
-      .catch((err) => this.closeModal(err));
+      .catch((err) => this.closeModal({ status: "failed", error: err }));
   }
 
   handleInputChange(event) {
-    const key = event.target.dataset.id;
+    const key = event.target.name;
     this.contactData = {
       ...this.contactData,
       [key]: event.target.value

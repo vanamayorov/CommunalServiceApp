@@ -1,0 +1,75 @@
+<apex:page
+  controller="PaymentPDFController"
+  applyHtmlTag="false"
+  renderAs="PDF"
+  showHeader="false"
+>
+  <html>
+    <head>
+      <style>
+        * {
+          box-sizing: border-box;
+        }
+
+        .heading {
+          font-weight: bold;
+        }
+
+        .heading--main {
+          font-size: 36px;
+        }
+
+        .heading--sub {
+          font-size: 21px;
+        }
+
+        table {
+          border-collapse: collapse;
+          margin-top: 25px;
+          width: 100%;
+        }
+
+        th {
+          background-color: #92d5f0;
+          font-size: 14px;
+          font-weight: bold;
+          padding: 5px;
+        }
+
+        td {
+          font-size: 12px;
+          padding: 5px;
+          text-align: left;
+          width: 16.666%;
+        }
+      </style>
+    </head>
+    <body>
+      <center>
+        <h1 class="heading">Payment Summary</h1>
+      </center>
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Month</th>
+              <th>Year</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{!formattedDate}</td>
+              <td>{!payment.Monthly_Bill__r.Month__c}</td>
+              <td>{!payment.Monthly_Bill__r.Year__c}</td>
+              <td>{!payment.Amount__c} {!payment.CurrencyIsoCode}</td>
+              <td>{!payment.Status__c}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </body>
+  </html>
+</apex:page>

@@ -1,0 +1,36 @@
+<template>
+  <table
+    class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-m-bottom_x-small"
+  >
+    <thead>
+      <tr class="slds-line-height_reset">
+        <th scope="col">
+          <div class="slds-truncate" title="Year">Year</div>
+        </th>
+        <th scope="col">
+          <div class="slds-truncate" title="Month">Month</div>
+        </th>
+        <th scope="col">
+          <div class="slds-truncate" title="Amount">
+            Amount {bill.CurrencyIsoCode}
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="slds-hint-parent">
+        <td data-label="Year">
+          <div class="slds-truncate" title={bill.Year__c}>{bill.Year__c}</div>
+        </td>
+        <td data-label="Month">
+          <div class="slds-truncate" title={bill.Month__c}>{bill.Month__c}</div>
+        </td>
+        <td data-label="Amount">
+          <div class="slds-truncate" title={bill.Left_To_Pay__c}>
+            {bill.Left_To_Pay__c}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</template>

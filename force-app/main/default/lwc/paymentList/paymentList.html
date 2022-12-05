@@ -40,26 +40,18 @@
               </td>
               <td data-label="Amount">
                 <div class="slds-truncate" title={payment.amount}>
-                  ${payment.amount}
+                  {payment.amount} {payment.isoCode}
+                </div>
+              </td>
+              <td data-label="Date">
+                <div class="slds-truncate" title={payment.date}>
+                  {payment.date}
                 </div>
               </td>
               <td data-label="Status">
-                <template if:true={payment.isSuccess}>
-                  <div
-                    class="slds-truncate slds-text-color_success"
-                    title={payment.status}
-                  >
-                    {payment.status}
-                  </div>
-                </template>
-                <template if:false={payment.isSuccess}>
-                  <div
-                    class="slds-truncate slds-text-color_error"
-                    title={payment.status}
-                  >
-                    {payment.status}
-                  </div>
-                </template>
+                <div class="slds-truncate" title={payment.status}>
+                  {payment.status}
+                </div>
               </td>
             </tr>
           </template>

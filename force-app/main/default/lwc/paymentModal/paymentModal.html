@@ -1,0 +1,10 @@
+<template>
+  <lightning-modal-header label={currentStepLabel}></lightning-modal-header>
+  <c-payment-modal-body-wrapper
+    steps={steps}
+    step={currentStep}
+    onhandlenextstep={handleNextStep}
+    onhandlefinish={handleFinish}
+    ongoback={handleGoBack}
+  ></c-payment-modal-body-wrapper>
+</template>
