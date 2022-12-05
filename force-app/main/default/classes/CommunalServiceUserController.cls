@@ -50,6 +50,51 @@ public with sharing class CommunalServiceUserController {
     }
   }
 
+  @AuraEnabled
+  public static Communal_Service_User__c changeAddress(String payload) {
+    try {
+      Map<String, Object> payloadMap = (Map<String, Object>) JSON.deserializeUntyped(
+        payload
+      );
+      String userId = (String) payloadMap.get('userId');
+      String regionId = (String) payloadMap.get('regionId');
+      String cityId = (String) payloadMap.get('cityId');
+      String managerId = (String) payloadMap.get('managerId');
+
+      Communal_Service_User__c user = [
+        SELECT Id, User__c, Region__c, City__c, Region_Manager__c
+        FROM Communal_Service_User__c
+        WHERE User__c = :userId
+        LIMIT 1
+      ];
+
+      user.Region__c = regionId;
+      user.City__c = cityId;
+      user.Region_Manager__c = managerId;
+
+      update user;
+      return user;
+    } catch (Exception e) {
+      throw new CustomException(e.getMessage());
+    }
+  }
+
+  @AuraEnabled
+  public static Communal_Service_User__c getCommunalServiceUserRegion(
+    String userId
+  ) {
+    try {
+      return [
+        SELECT Id, User__c, Region__r.Name, City__r.Name
+        FROM Communal_Service_User__c
+        WHERE User__c = :userId
+        LIMIT 1
+      ];
+    } catch (Exception e) {
+      throw new CustomException(e.getMessage());
+    }
+  }
+
   public static List<Messaging.SendEmailResult> notifyUsers(
     List<Communal_Service_User__c> communalServiceUsers
   ) {

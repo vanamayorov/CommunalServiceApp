@@ -1,5 +1,5 @@
 public with sharing class RegionManagerController {
-  @AuraEnabled(cacheable=true)
+  @AuraEnabled
   public static Communal_Service_User__c getRegionManagerByUserId(
     String userId
   ) {
