@@ -6,6 +6,7 @@ import {
   unsubscribe
 } from "lightning/messageService";
 import UPDATE_AFTER_PAYMENT_CHANNEL from "@salesforce/messageChannel/Update_After_Payment__c";
+import { getFormattedTime } from "c/dateTimeHelper";
 import Id from "@salesforce/user/Id";
 
 const COLUMNS = [
@@ -49,7 +50,7 @@ export default class PaymentList extends LightningElement {
           year: payment.Monthly_Bill__r.Year__c,
           amount: payment.Amount__c,
           isoCode: payment.CurrencyIsoCode,
-          date: this.getFormattedTime(payment.Date__c),
+          date: getFormattedTime(payment.Date__c),
           status: payment.Status__c
         }));
       })
@@ -59,22 +60,6 @@ export default class PaymentList extends LightningElement {
       .finally(() => {
         this.isLoading = false;
       });
-  }
-
-  getFormattedTime(time) {
-    return `${new Date(time).getHours()}:${
-      new Date(time).getMinutes() < 10
-        ? `0${new Date(time).getMinutes()}`
-        : new Date(time).getMinutes()
-    } ${
-      new Date(time).getDate() < 10
-        ? `0${new Date(time).getDate()}`
-        : new Date(time).getDate()
-    }.${
-      new Date(time).getMonth() < 10
-        ? `0${new Date(time).getMonth()}`
-        : new Date(time).getMonth()
-    }.${new Date(time).getFullYear()}`;
   }
 
   disconnectedCallback() {

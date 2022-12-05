@@ -1,6 +1,8 @@
 import { LightningElement, api } from "lwc";
+import { loadScript } from "lightning/platformResourceLoader";
 import payForMonth from "@salesforce/apex/PaymentController.payForMonth";
 import getUserEmail from "@salesforce/apex/CommunalServiceUserController.getUserEmail";
+import paymentLib from "@salesforce/resourceUrl/paymentlib";
 import Id from "@salesforce/user/Id";
 
 export default class PaymentModalSecondScreen extends LightningElement {
@@ -21,8 +23,10 @@ export default class PaymentModalSecondScreen extends LightningElement {
     expiration: false,
     amount: false
   };
-  cardNumber = "";
-  expiration = "";
+
+  connectedCallback() {
+    Promise.all([loadScript(this, paymentLib)]);
+  }
 
   handleInput(e) {
     const key = e.target.name;
@@ -38,12 +42,19 @@ export default class PaymentModalSecondScreen extends LightningElement {
     };
 
     if (key === "cardNumber") {
-      this.formatCardNumber(e.detail.value);
-      this.credentialsInfo.cardNumber = this.cardNumber.split(" ").join("");
+      // eslint-disable-next-line no-undef
+      Payment.formatCardNumber(e.target);
+      this.credentialsInfo.cardNumber = this.credentialsInfo.cardNumber
+        .split(" ")
+        .join("");
     }
 
     if (key === "expiration") {
-      this.formatExpireDate(e.detail.value);
+      // eslint-disable-next-line no-undef
+      Payment.formatCardExpiry(e.target);
+      this.credentialsInfo.expiration = this.credentialsInfo.expiration
+        .split(" ")
+        .join("");
     }
   }
 
@@ -78,33 +89,6 @@ export default class PaymentModalSecondScreen extends LightningElement {
           })
         );
       });
-  }
-
-  formatCardNumber(value) {
-    const matches = value
-      .replace(/\s+/g, "")
-      .replace(/[^0-9]/gi, "")
-      .match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || "";
-    const parts = [];
-    for (let i = 0; i < match.length; i += 4) {
-      parts.push(match.substring(i, i + 4));
-    }
-
-    if (parts.length) {
-      this.cardNumber = parts.join(" ");
-    } else {
-      this.cardNumber = value;
-    }
-  }
-
-  formatExpireDate(value) {
-    this.expiration = value
-      .replace(/[^0-9]/g, "")
-      .replace(/^([2-9])$/g, "0$1")
-      .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
-      .replace(/^0{1,}/g, "0")
-      .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
   }
 
   get nextBtnDisabled() {
