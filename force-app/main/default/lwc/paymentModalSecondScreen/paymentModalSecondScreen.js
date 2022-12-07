@@ -1,10 +1,10 @@
+/* eslint-disable no-undef */
 import { LightningElement, api } from "lwc";
 import { loadScript } from "lightning/platformResourceLoader";
 import payForMonth from "@salesforce/apex/PaymentController.payForMonth";
 import getUserEmail from "@salesforce/apex/CommunalServiceUserController.getUserEmail";
 import paymentLib from "@salesforce/resourceUrl/paymentlib";
 import Id from "@salesforce/user/Id";
-
 export default class PaymentModalSecondScreen extends LightningElement {
   @api bill;
   @api steps;
@@ -42,7 +42,6 @@ export default class PaymentModalSecondScreen extends LightningElement {
     };
 
     if (key === "cardNumber") {
-      // eslint-disable-next-line no-undef
       Payment.formatCardNumber(e.target);
       this.credentialsInfo.cardNumber = this.credentialsInfo.cardNumber
         .split(" ")
@@ -50,7 +49,6 @@ export default class PaymentModalSecondScreen extends LightningElement {
     }
 
     if (key === "expiration") {
-      // eslint-disable-next-line no-undef
       Payment.formatCardExpiry(e.target);
       this.credentialsInfo.expiration = this.credentialsInfo.expiration
         .split(" ")
