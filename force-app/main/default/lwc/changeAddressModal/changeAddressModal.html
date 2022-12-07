@@ -1,0 +1,92 @@
+<template>
+  <lightning-modal-header label="Change address"></lightning-modal-header>
+  <lightning-modal-body>
+    <template if:true={error}>
+      <div class="slds-text-title slds-text-color_error slds-m-bottom_x-small">
+        {error}
+      </div>
+    </template>
+    <template if:true={userHasDebt}>
+      <div class="slds-text-body_regular">
+        Unfortunately, You cannot change your address until you pay bills by
+        your current address.<br />
+        Please, navigate to Pay for Month button in Actions row or click a
+        button below.
+      </div>
+      <div class="slds-grid slds-grid_align-center slds-m-top_x-small">
+        <lightning-button
+          variant="brand"
+          label="Pay Bills"
+          title="Pay Bills"
+          onclick={handlePayBills}
+          class="slds-m-left_x-small"
+        ></lightning-button>
+      </div>
+    </template>
+
+    <template if:false={userHasDebt}>
+      <template if:false={successfullyChangedAdress}>
+        <div>Your current address is: {currentRegion}, {currentCity}</div>
+        <lightning-combobox
+          name="region"
+          label="Choose region"
+          value={regionId}
+          placeholder="Select Region"
+          options={regionsOptions}
+          onchange={handleChangeRegion}
+        ></lightning-combobox>
+
+        <template if:true={regionId}>
+          <lightning-combobox
+            name="city"
+            label="Choose city"
+            value={cityId}
+            placeholder="Select City"
+            options={cities}
+            onchange={handleChangeCity}
+          >
+          </lightning-combobox>
+        </template>
+      </template>
+
+      <template if:true={successfullyChangedAdress}>
+        <div
+          class="slds-grid slds-grid_vertical-align-center slds-grid_align-center"
+        >
+          <lightning-icon
+            icon-name="action:approval"
+            alternative-text="Approved"
+            title="Approved"
+          ></lightning-icon>
+          <h2 class="slds-text-heading_small slds-m-left_small">
+            Successfully changed your address!
+          </h2>
+        </div>
+      </template>
+    </template>
+  </lightning-modal-body>
+  <lightning-modal-footer>
+    <template if:false={userHasDebt}>
+      <template if:false={successfullyChangedAdress}>
+        <lightning-button
+          class="slds-m-left_x-small"
+          variant="brand"
+          label="Change address"
+          title="Change address"
+          onclick={handleChangeAddress}
+          disabled={changeAddressBtnDisabled}
+        ></lightning-button>
+      </template>
+      <template if:true={successfullyChangedAdress}>
+        <lightning-button
+          class="slds-m-left_x-small"
+          variant="brand"
+          label="Close"
+          title="Close"
+          onclick={handleClose}
+        >
+        </lightning-button>
+      </template>
+    </template>
+  </lightning-modal-footer>
+</template>
