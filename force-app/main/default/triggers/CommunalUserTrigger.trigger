@@ -5,10 +5,10 @@ trigger CommunalUserTrigger on Communal_Service_User__c(
 ) {
   if (Trigger.isBefore) {
     if (Trigger.isDelete) {
-      // CommunalServiceUserTriggerHandler.makeUserPrivate(Trigger.old);
+      CommunalServiceUserTriggerHandler.makeUserPrivate(Trigger.old);
     }
   }
   if (Trigger.isAfter) {
-    // CommunalServiceUserTriggerHandler.makeUserPublic(Trigger.new);
+    CommunalServiceUserTriggerHandler.makeUserPublic(Trigger.new);
   }
 }
