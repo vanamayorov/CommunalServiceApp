@@ -9,7 +9,7 @@
   <template if:false={isLoading}>
     <template if:true={paymentsListIsFilled}>
       <table
-        class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered"
+        class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered slds-m-bottom_x-small"
       >
         <thead>
           <tr class="slds-line-height_reset">
@@ -21,7 +21,7 @@
           </tr>
         </thead>
         <tbody>
-          <template for:each={data} for:item="payment">
+          <template for:each={getPaymentsByPage} for:item="payment">
             <tr class="slds-hint-parent" key={payment.id}>
               <th data-label="Link" scope="row">
                 <div class="slds-truncate" title="Id">
@@ -57,13 +57,27 @@
           </template>
         </tbody>
       </table>
+      <lightning-button-group>
+        <lightning-button
+          variant="brand"
+          label="Prev"
+          onclick={handlePrevPage}
+          disabled={isPrevPageZero}
+        ></lightning-button>
+        <lightning-button
+          variant="brand"
+          label="Next"
+          onclick={handleNextPage}
+          disabled={isNextPageFinal}
+        ></lightning-button>
+      </lightning-button-group>
     </template>
-    <template if:false={paymentsListIsFilled}>
-      <h2
-        class="slds-align_absolute-center slds-text-heading_medium slds-p-bottom_medium slds-p-bottom_medium"
-      >
-        No payments made yet...
-      </h2>
-    </template>
+
+    <h2
+      if:false={paymentsListIsFilled}
+      class="slds-align_absolute-center slds-text-heading_medium slds-p-bottom_medium slds-p-bottom_medium"
+    >
+      No payments made yet...
+    </h2>
   </template>
 </template>

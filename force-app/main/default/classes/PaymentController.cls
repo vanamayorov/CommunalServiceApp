@@ -13,6 +13,7 @@ public with sharing class PaymentController {
           CurrencyIsoCode
         FROM Payment__c
         WHERE Monthly_Bill__r.Communal_Service_User__r.User__c = :userId
+        ORDER BY Date__c DESC
       ];
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
@@ -63,7 +64,7 @@ public with sharing class PaymentController {
     }
   }
 
-  private class Response {
+  public class Response {
     @AuraEnabled
     public Boolean ok;
     @AuraEnabled

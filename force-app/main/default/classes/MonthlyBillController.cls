@@ -35,7 +35,8 @@ public with sharing class MonthlyBillController {
         Water_Price__c = communalRate.Water_Rate__c *
           metersReading.Water_Readings__c,
         Year__c = metersReading.Year__c,
-        Month__c = metersReading.Month__c
+        Month__c = metersReading.Month__c,
+        Created_Date__c = Date.today()
       );
       insert monthlyBill;
       return monthlyBill;

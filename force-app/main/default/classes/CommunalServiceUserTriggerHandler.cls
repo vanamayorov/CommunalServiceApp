@@ -16,9 +16,9 @@ public with sharing class CommunalServiceUserTriggerHandler {
 
     if (!existingUsersShareList.isEmpty()) {
       for (Communal_Service_User__c user : [
-        SELECT Id, Region_Manager__r.User__c
+        SELECT Id, Region_Manager__c, Region_Manager__r.User__c
         FROM Communal_Service_User__c
-        WHERE Id IN :usersIds
+        WHERE Id IN :usersIds AND Region_Manager__c != NULL
       ]) {
         for (Communal_Service_User__Share rule : existingUsersShareList) {
           if (user.Id == rule.ParentId) {
@@ -32,9 +32,9 @@ public with sharing class CommunalServiceUserTriggerHandler {
       delete usersShareListToDelete;
 
     for (Communal_Service_User__c user : [
-      SELECT Id, Region_Manager__r.User__c
+      SELECT Id, Region_Manager__c, Region_Manager__r.User__c
       FROM Communal_Service_User__c
-      WHERE Id IN :usersIds
+      WHERE Id IN :usersIds AND Region_Manager__c != NULL
     ]) {
       Communal_Service_User__Share userShare = new Communal_Service_User__Share();
       userShare.ParentId = user.Id;

@@ -16,8 +16,9 @@ public with sharing class RegionManagerController {
   }
 
   @AuraEnabled
-  public static void contactManager(String payload) {
+  public static Map<String, Boolean> contactManager(String payload) {
     try {
+      Boolean emailSentSuccessfully = true;
       Map<String, Object> payloadMap = (Map<String, Object>) JSON.deserializeUntyped(
         payload
       );
@@ -25,7 +26,18 @@ public with sharing class RegionManagerController {
       String message = (String) payloadMap.get('message');
       String subject = (String) payloadMap.get('subject');
       String userEmail = (String) payloadMap.get('userEmail');
-      EmailService.sendEmail(userEmail, managerEmail, subject, message);
+      List<Messaging.SendEmailResult> emailsRes = EmailService.sendEmail(
+        userEmail,
+        managerEmail,
+        subject,
+        message
+      );
+      for (Messaging.SendEmailResult res : emailsRes) {
+        emailSentSuccessfully = emailSentSuccessfully && res.success;
+      }
+      return new Map<String, Boolean>{
+        'sentSuccessfully' => emailSentSuccessfully
+      };
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     }
