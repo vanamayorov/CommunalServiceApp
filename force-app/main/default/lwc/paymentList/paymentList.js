@@ -67,16 +67,10 @@ export default class PaymentList extends LightningElement {
   }
 
   handleNextPage() {
-    // if (this.currentPage + 1 >= this.maxPages) {
-    //   return;
-    // }
     this.currentPage++;
   }
 
   handlePrevPage() {
-    // if (this.currentPage - 1 < 0) {
-    //   return;
-    // }
     this.currentPage--;
   }
 

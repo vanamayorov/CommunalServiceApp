@@ -9,8 +9,8 @@ const getFormattedTime = (time) =>
       : new Date(time).getDate()
   }.${
     new Date(time).getMonth() < 10
-      ? `0${new Date(time).getMonth()}`
-      : new Date(time).getMonth()
+      ? `0${new Date(time).getMonth() + 1}`
+      : new Date(time).getMonth() + 1
   }.${new Date(time).getFullYear()}`;
 
 export { getFormattedTime };
