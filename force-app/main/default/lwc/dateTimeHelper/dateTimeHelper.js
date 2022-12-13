@@ -8,7 +8,7 @@ const getFormattedTime = (time) =>
       ? `0${new Date(time).getDate()}`
       : new Date(time).getDate()
   }.${
-    new Date(time).getMonth() < 10
+    new Date(time).getMonth() < 9
       ? `0${new Date(time).getMonth() + 1}`
       : new Date(time).getMonth() + 1
   }.${new Date(time).getFullYear()}`;
