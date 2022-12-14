@@ -8,22 +8,24 @@ public with sharing class CommunalServiceUserTriggerHandler {
       usersIds.add(user.Id);
     }
 
-    List<Communal_Service_User__Share> existingUsersShareList = [
+    Map<Id, Communal_Service_User__Share> existingUsersShareList = new Map<Id, Communal_Service_User__Share>();
+
+    for (Communal_Service_User__Share rule : [
       SELECT Id, ParentId, RowCause
       FROM Communal_Service_User__Share
       WHERE ParentId IN :usersIds AND RowCause = 'Manual'
-    ];
+    ]) {
+      existingUsersShareList.put(rule.ParentId, rule);
+    }
 
-    if (!existingUsersShareList.isEmpty()) {
+    if (!existingUsersShareList.keySet().isEmpty()) {
       for (Communal_Service_User__c user : [
         SELECT Id, Region_Manager__c, Region_Manager__r.User__c
         FROM Communal_Service_User__c
         WHERE Id IN :usersIds AND Region_Manager__c != NULL
       ]) {
-        for (Communal_Service_User__Share rule : existingUsersShareList) {
-          if (user.Id == rule.ParentId) {
-            usersShareListToDelete.add(rule);
-          }
+        if (existingUsersShareList.get(user.Id) != null) {
+          usersShareListToDelete.add(existingUsersShareList.get(user.Id));
         }
       }
     }
@@ -71,6 +73,40 @@ public with sharing class CommunalServiceUserTriggerHandler {
 
     if (!userShareList.isEmpty()) {
       delete userShareList;
+    }
+  }
+
+  public static void checkIfUserOwnerHasOtherUsers(
+    List<Communal_Service_User__c> communalUsers
+  ) {
+    Set<Id> users = new Set<Id>();
+    for (Communal_Service_User__c comUser : communalUsers) {
+      users.add(comUser.User__c);
+    }
+
+    Map<Id, Communal_Service_User__c> comUsersWithSetUsers = new Map<Id, Communal_Service_User__c>();
+
+    for (Communal_Service_User__c comUser : [
+      SELECT Id, User__c
+      FROM Communal_Service_User__c
+      WHERE User__c IN :users
+    ]) {
+      comUsersWithSetUsers.put(comUser.User__c, comUser);
+    }
+
+    if (comUsersWithSetUsers.keySet().isEmpty())
+      return;
+
+    for (Communal_Service_User__c comUser : communalUsers) {
+      if (
+        comUsersWithSetUsers.get(comUser.User__c) != null &&
+        (comUser.Id == null ||
+        comUsersWithSetUsers.get(comUser.User__c).Id != comUser.Id)
+      ) {
+        comUser.addError(
+          'This user is already set in another communal service user record.'
+        );
+      }
     }
   }
 }

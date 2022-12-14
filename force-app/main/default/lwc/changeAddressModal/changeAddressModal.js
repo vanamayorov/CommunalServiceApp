@@ -94,7 +94,7 @@ export default class ChangeAddressModal extends LightningModal {
       this.managerId = region.Region_Managers__r[0].Id;
     } else {
       this.error = new Error(
-        "This region has no manager, please select another one"
+        "This region has no manager, please select another one."
       );
     }
 

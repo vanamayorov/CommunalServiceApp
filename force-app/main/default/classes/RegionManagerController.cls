@@ -4,12 +4,21 @@ public with sharing class RegionManagerController {
     String userId
   ) {
     try {
-      return [
+      List<Communal_Service_User__c> usersList = [
         SELECT Id, User__c, Region_Manager__r.Email__c, Email__c
         FROM Communal_Service_User__c
         WHERE User__c = :userId
-        LIMIT 1
       ];
+
+      if (usersList.isEmpty()) {
+        throw new CustomException(
+          'Communal Service User with userId: ' +
+          userId +
+          ' was not found'
+        );
+      }
+
+      return usersList[0];
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     }

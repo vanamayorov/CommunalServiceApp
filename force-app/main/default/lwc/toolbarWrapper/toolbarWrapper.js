@@ -1,6 +1,7 @@
 import { LightningElement, wire } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import {
+  publish,
   subscribe,
   MessageContext,
   unsubscribe
@@ -83,6 +84,10 @@ export default class ToolbarWrapper extends LightningElement {
   openPaymentModal() {
     PaymentModal.open({
       size: "small"
+    }).then(() => {
+      publish(this.messageContext, UPDATE_AFTER_PAYMENT_CHANNEL, {
+        status: "updated"
+      });
     });
   }
 

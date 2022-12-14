@@ -129,17 +129,18 @@ private class CommunalServiceUserControllerTest {
   @isTest
   static void getUserEmailTestNegative() {
     Test.startTest();
-    Communal_Service_User__c user = [
-      SELECT Id, User__r.FirstName, User__c
-      FROM Communal_Service_User__c
-      WHERE User__r.FirstName = 'Test User'
-      LIMIT 1
-    ];
-    String expectedEmail = 'testmanager@gmail.com';
-    String actualEmail = CommunalServiceUserController.getUserEmail(
-      user.User__c
-    );
-    System.assertNotEquals(expectedEmail, actualEmail);
+    try {
+      String email = CommunalServiceUserController.getUserEmail('wrongUserId');
+      System.assert(
+        false,
+        'Unreachable statement, the method should have thrown an exception'
+      );
+    } catch (Exception e) {
+      System.assertEquals(
+        'Communal Service User with userId: wrongUserId was not found',
+        e.getMessage()
+      );
+    }
     Test.stopTest();
   }
 
@@ -163,17 +164,20 @@ private class CommunalServiceUserControllerTest {
   @isTest
   static void userHasDebtTestNegative() {
     Test.startTest();
-    Communal_Service_User__c user = [
-      SELECT Id, Email__c, User__r.FirstName, User__c
-      FROM Communal_Service_User__c
-      WHERE User__r.FirstName = 'Test User'
-      LIMIT 1
-    ];
-    Map<String, Boolean> debtMap = CommunalServiceUserController.userHasDebt(
-      user.User__c
-    );
-    System.assertNotEquals(null, debtMap);
-    System.assertNotEquals(false, debtMap.get('result'));
+    try {
+      Map<String, Boolean> debtMap = CommunalServiceUserController.userHasDebt(
+        'wrongUserId'
+      );
+      System.assert(
+        false,
+        'Unreachable statement, the method should have thrown an exception'
+      );
+    } catch (Exception e) {
+      System.assertEquals(
+        'Communal Service User with userId: wrongUserId was not found',
+        e.getMessage()
+      );
+    }
     Test.stopTest();
   }
 
@@ -194,18 +198,16 @@ private class CommunalServiceUserControllerTest {
   }
 
   @isTest
-  static void getUnpaidMonthlyBillsTestNegative() {
+  static void getUnpaidMonthlyBillsTestException() {
     Test.startTest();
-    Communal_Service_User__c user = [
-      SELECT Id, Email__c, User__r.FirstName, User__c
-      FROM Communal_Service_User__c
-      WHERE User__r.FirstName = 'Test User'
-      LIMIT 1
-    ];
-    List<Monthly_Bill__c> monthlyBills = CommunalServiceUserController.getUnpaidMonthlyBills(
-      user.User__c
-    );
-    System.assertNotEquals(true, monthlyBills.isEmpty());
+    try {
+      List<Monthly_Bill__c> monthlyBills = CommunalServiceUserController.getUnpaidMonthlyBills(
+        null
+      );
+    } catch (Exception e) {
+      System.assertNotEquals(null, e);
+      System.assertEquals(true, String.isBlank(e.getMessage()));
+    }
     Test.stopTest();
   }
 
@@ -251,6 +253,51 @@ private class CommunalServiceUserControllerTest {
   }
 
   @isTest
+  static void changeAddressTestException() {
+    Test.startTest();
+    try {
+      Communal_Service_User__c user = [
+        SELECT Id, User__r.FirstName, User__c
+        FROM Communal_Service_User__c
+        WHERE User__r.FirstName = 'Test User'
+        LIMIT 1
+      ];
+
+      Region__c region = [
+        SELECT
+          Id,
+          Name,
+          (SELECT Id FROM Region_Managers__r LIMIT 1),
+          (SELECT Id FROM Cities__r LIMIT 1)
+        FROM Region__c
+        WHERE Name = 'Kyiv Oblast'
+        LIMIT 1
+      ];
+
+      Map<String, String> payloadMap = new Map<String, String>{
+        'userId' => 'wrongUserId',
+        'regionId' => region.Id,
+        'cityId' => region.Cities__r[0].Id,
+        'managerId' => region.Region_Managers__r[0].Id
+      };
+
+      Communal_Service_User__c changedUser = CommunalServiceUserController.changeAddress(
+        JSON.serialize(payloadMap)
+      );
+      System.assert(
+        false,
+        'Unreachable statement, the method should have thrown an exception'
+      );
+    } catch (Exception e) {
+      System.assertEquals(
+        'Communal Service User with userId: wrongUserId was not found',
+        e.getMessage()
+      );
+    }
+    Test.stopTest();
+  }
+
+  @isTest
   static void getCommunalServiceUserRegionTestPositive() {
     Test.startTest();
     Communal_Service_User__c user = [
@@ -266,6 +313,26 @@ private class CommunalServiceUserControllerTest {
     String expectedCity = 'Kharkiv';
     System.assertEquals(expectedRegion, res.Region__r.Name);
     System.assertEquals(expectedCity, res.City__r.Name);
+    Test.stopTest();
+  }
+
+  @isTest
+  static void getCommunalServiceUserRegionTestException() {
+    Test.startTest();
+    try {
+      Communal_Service_User__c res = CommunalServiceUserController.getCommunalServiceUserRegion(
+        'wrongUserId'
+      );
+      System.assert(
+        false,
+        'Unreachable statement, the method should have thrown an exception'
+      );
+    } catch (Exception e) {
+      System.assertEquals(
+        'Communal Service User with userId: wrongUserId was not found',
+        e.getMessage()
+      );
+    }
     Test.stopTest();
   }
 

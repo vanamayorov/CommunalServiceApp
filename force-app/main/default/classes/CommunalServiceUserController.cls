@@ -2,14 +2,21 @@ public with sharing class CommunalServiceUserController {
   @AuraEnabled
   public static String getUserEmail(String userId) {
     try {
-      Communal_Service_User__c user = [
+      List<Communal_Service_User__c> userList = [
         SELECT Id, Email__c
         FROM Communal_Service_User__c
         WHERE User__c = :userId
-        LIMIT 1
       ];
 
-      return user.Email__c;
+      if (userList.isEmpty()) {
+        throw new CustomException(
+          'Communal Service User with userId: ' +
+          userId +
+          ' was not found'
+        );
+      }
+
+      return userList[0].Email__c;
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     }
@@ -18,14 +25,21 @@ public with sharing class CommunalServiceUserController {
   @AuraEnabled(cacheable=true)
   public static Map<String, Boolean> userHasDebt(String userId) {
     try {
-      Communal_Service_User__c user = [
+      List<Communal_Service_User__c> userList = [
         SELECT Id, User__c, Debt__c
         FROM Communal_Service_User__c
         WHERE User__c = :userId
-        LIMIT 1
       ];
 
-      return new Map<String, Boolean>{ 'result' => user.Debt__c > 0 };
+      if (userList.isEmpty()) {
+        throw new CustomException(
+          'Communal Service User with userId: ' +
+          userId +
+          ' was not found'
+        );
+      }
+
+      return new Map<String, Boolean>{ 'result' => userList[0].Debt__c > 0 };
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     }
@@ -61,13 +75,21 @@ public with sharing class CommunalServiceUserController {
       String cityId = (String) payloadMap.get('cityId');
       String managerId = (String) payloadMap.get('managerId');
 
-      Communal_Service_User__c user = [
+      List<Communal_Service_User__c> userList = [
         SELECT Id, User__c, Region__c, City__c, Region_Manager__c
         FROM Communal_Service_User__c
         WHERE User__c = :userId
-        LIMIT 1
       ];
 
+      if (userList.isEmpty()) {
+        throw new CustomException(
+          'Communal Service User with userId: ' +
+          userId +
+          ' was not found'
+        );
+      }
+
+      Communal_Service_User__c user = userList[0];
       user.Region__c = regionId;
       user.City__c = cityId;
       user.Region_Manager__c = managerId;
@@ -84,12 +106,21 @@ public with sharing class CommunalServiceUserController {
     String userId
   ) {
     try {
-      return [
+      List<Communal_Service_User__c> usersList = [
         SELECT Id, User__c, Region__r.Name, City__r.Name
         FROM Communal_Service_User__c
         WHERE User__c = :userId
-        LIMIT 1
       ];
+
+      if (usersList.isEmpty()) {
+        throw new CustomException(
+          'Communal Service User with userId: ' +
+          userId +
+          ' was not found'
+        );
+      }
+
+      return usersList[0];
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     }

@@ -50,7 +50,25 @@ private class CommunalUserTriggerTest {
       LanguageLocaleKey = 'en_US',
       LocaleSidKey = 'en_US'
     );
-    insert new List<User>{ user, userManagerFromKharkiv, userManagerFromKyiv };
+
+    User anotherUser = new User(
+      ProfileId = userProfile.Id,
+      FirstName = 'Test User 2',
+      LastName = 'Org',
+      Email = 'test@gmail.com',
+      Username = 'testuserorg@gmail.com' + System.currentTimeMillis(),
+      Alias = 'alias',
+      TimeZoneSidKey = 'America/Los_Angeles',
+      EmailEncodingKey = 'UTF-8',
+      LanguageLocaleKey = 'en_US',
+      LocaleSidKey = 'en_US'
+    );
+    insert new List<User>{
+      user,
+      anotherUser,
+      userManagerFromKharkiv,
+      userManagerFromKyiv
+    };
 
     Region__c kharkivRegion = new Region__c(Name = 'Kharkiv Oblast');
     Region__c kyivRegion = new Region__c(Name = 'Kyiv Oblast');
@@ -90,13 +108,14 @@ private class CommunalUserTriggerTest {
 
     insert communalUser;
   }
+
   @isTest
   static void insertUserTest() {
     Test.startTest();
     User user = [
       SELECT Id, FirstName
       FROM User
-      WHERE FirstName = 'Test User'
+      WHERE FirstName = 'Test User 2'
       LIMIT 1
     ];
     Region_Manager__c regKharkivManager = [
@@ -124,6 +143,45 @@ private class CommunalUserTriggerTest {
     System.assertNotEquals(null, shareRules);
     System.assertEquals(true, !shareRules.isEmpty());
     Test.stopTest();
+  }
+
+  @isTest
+  static void insertUserTestException() {
+    Test.startTest();
+    try {
+      User user = [
+        SELECT Id, FirstName
+        FROM User
+        WHERE FirstName = 'Test User'
+        LIMIT 1
+      ];
+      Region_Manager__c regKharkivManager = [
+        SELECT Id, Email__c, Region__c
+        FROM Region_Manager__c
+        WHERE Email__c = 'kharkivmanager@gmail.com'
+        LIMIT 1
+      ];
+      City__c city = [SELECT Id, Name FROM City__c WHERE Name = 'Kyiv' LIMIT 1];
+      Communal_Service_User__c communalUser = new Communal_Service_User__c(
+        User__c = user.Id,
+        Email__c = 'communaluser@gmail.com',
+        Region_Manager__c = regKharkivManager.Id,
+        Region__c = regKharkivManager.Region__c,
+        City__c = city.Id
+      );
+      insert communalUser;
+
+      System.assert(false, 'This statement is unreachable.');
+      Test.stopTest();
+    } catch (Exception e) {
+      System.assertEquals(
+        true,
+        e.getMessage()
+          .contains(
+            'This user is already set in another communal service user record.'
+          )
+      );
+    }
   }
 
   @isTest

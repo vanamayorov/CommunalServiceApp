@@ -1,4 +1,4 @@
-trigger CommunalRateTrigger on Communal_Rates__c(before update) {
+trigger CommunalRateTrigger on Communal_Rates__c(before update, before insert) {
   String userProfileName = [
     SELECT Id, Name
     FROM profile
@@ -11,7 +11,7 @@ trigger CommunalRateTrigger on Communal_Rates__c(before update) {
   }
 
   if (Trigger.isBefore) {
-    if (Trigger.isUpdate) {
+    if (Trigger.isUpdate || Trigger.isUpdate) {
       CommunalRateTriggerHandler.restrictChangeRatesForManager(Trigger.new);
     }
   }

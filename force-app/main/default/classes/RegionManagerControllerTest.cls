@@ -60,7 +60,7 @@ private class RegionManagerControllerTest {
   }
 
   @isTest
-  static void getRegionManagerByUserIdTest() {
+  static void getRegionManagerByUserIdTestPositive() {
     Test.startTest();
     Communal_Service_User__c communalUser = [
       SELECT Id, User__c, Email__c, Region_Manager__r.Email__c
@@ -76,6 +76,26 @@ private class RegionManagerControllerTest {
       userWithManager.Region_Manager__r.Email__c
     );
     System.assertEquals(communalUser.Email__c, userWithManager.Email__c);
+    Test.stopTest();
+  }
+
+  @isTest
+  static void getRegionManagerByUserIdTestException() {
+    Test.startTest();
+    try {
+      Communal_Service_User__c userWithManager = RegionManagerController.getRegionManagerByUserId(
+        'wrongUserId'
+      );
+      System.assert(
+        false,
+        'Unreachable statement, the method should have thrown an exception'
+      );
+    } catch (Exception e) {
+      System.assertEquals(
+        'Communal Service User with userId: wrongUserId was not found',
+        e.getMessage()
+      );
+    }
     Test.stopTest();
   }
 
