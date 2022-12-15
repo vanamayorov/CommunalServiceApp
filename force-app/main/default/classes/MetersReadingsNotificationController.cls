@@ -9,7 +9,7 @@ public with sharing class MetersReadingsNotificationController implements Schedu
         User__c,
         User__r.FirstName,
         User__r.LastName,
-        Email__c,
+        User__r.Email,
         (
           SELECT Id, Month__c, Year__c
           FROM Meters_Readings__r

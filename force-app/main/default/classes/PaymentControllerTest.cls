@@ -35,9 +35,10 @@ private class PaymentControllerTest {
 
     Communal_Service_User__c communalUser = new Communal_Service_User__c(
       User__c = user.Id,
-      Email__c = 'communaluser@gmail.com',
       Region__c = kharkivRegion.Id,
-      City__c = kharkivCity.Id
+      City__c = kharkivCity.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
 
     insert communalUser;
@@ -96,9 +97,9 @@ private class PaymentControllerTest {
   static void payForMonthTestPositive() {
     Test.startTest();
     Monthly_Bill__c monthlyBill = [
-      SELECT Id, Communal_Service_User__r.Email__c
+      SELECT Id, Communal_Service_User__r.User__r.Email
       FROM Monthly_Bill__c
-      WHERE Communal_Service_User__r.Email__c = 'communaluser@gmail.com'
+      WHERE Communal_Service_User__r.User__r.Email = 'communaluser@gmail.com'
       LIMIT 1
     ];
     Map<String, String> payloadMap = new Map<String, String>{
@@ -108,7 +109,7 @@ private class PaymentControllerTest {
       'expiration' => '12/22',
       'amount' => '2',
       'billId' => monthlyBill.Id,
-      'email' => monthlyBill.Communal_Service_User__r.Email__c
+      'email' => monthlyBill.Communal_Service_User__r.User__r.Email
     };
     PaymentController.Response response = PaymentController.payForMonth(
       JSON.serialize(payloadMap)
@@ -123,9 +124,9 @@ private class PaymentControllerTest {
   static void payForMonthTestNegative() {
     Test.startTest();
     Monthly_Bill__c monthlyBill = [
-      SELECT Id, Communal_Service_User__r.Email__c
+      SELECT Id, Communal_Service_User__r.User__r.Email
       FROM Monthly_Bill__c
-      WHERE Communal_Service_User__r.Email__c = 'communaluser@gmail.com'
+      WHERE Communal_Service_User__r.User__r.Email = 'test@gmail.com'
       LIMIT 1
     ];
     Map<String, String> payloadMap = new Map<String, String>{
@@ -135,7 +136,7 @@ private class PaymentControllerTest {
       'expiration' => '12/22',
       'amount' => '2',
       'billId' => monthlyBill.Id,
-      'email' => monthlyBill.Communal_Service_User__r.Email__c
+      'email' => monthlyBill.Communal_Service_User__r.User__r.Email
     };
     PaymentController.Response response = PaymentController.payForMonth(
       JSON.serialize(payloadMap)
@@ -154,9 +155,9 @@ private class PaymentControllerTest {
     Test.startTest();
     try {
       Monthly_Bill__c monthlyBill = [
-        SELECT Id, Communal_Service_User__r.Email__c
+        SELECT Id, Communal_Service_User__r.User__r.Email
         FROM Monthly_Bill__c
-        WHERE Communal_Service_User__r.Email__c = 'communaluser@gmail.com'
+        WHERE Communal_Service_User__r.User__r.Email = 'test@gmail.com'
         LIMIT 1
       ];
       Map<String, String> payloadMap = new Map<String, String>{
@@ -166,7 +167,7 @@ private class PaymentControllerTest {
         'expiration' => '12/22',
         'amount' => '-2',
         'billId' => monthlyBill.Id,
-        'email' => monthlyBill.Communal_Service_User__r.Email__c
+        'email' => monthlyBill.Communal_Service_User__r.User__r.Email
       };
       PaymentController.Response response = PaymentController.payForMonth(
         JSON.serialize(payloadMap)

@@ -5,7 +5,7 @@ public with sharing class RegionManagerController {
   ) {
     try {
       List<Communal_Service_User__c> usersList = [
-        SELECT Id, User__c, Region_Manager__r.Email__c, Email__c
+        SELECT Id, User__c, Region_Manager__r.Email__c, User__r.Email
         FROM Communal_Service_User__c
         WHERE User__c = :userId
       ];

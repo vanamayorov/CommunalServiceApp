@@ -3,7 +3,7 @@ public with sharing class CommunalServiceUserController {
   public static String getUserEmail(String userId) {
     try {
       List<Communal_Service_User__c> userList = [
-        SELECT Id, Email__c
+        SELECT Id, User__r.Email
         FROM Communal_Service_User__c
         WHERE User__c = :userId
       ];
@@ -16,7 +16,7 @@ public with sharing class CommunalServiceUserController {
         );
       }
 
-      return userList[0].Email__c;
+      return userList[0].User__r.Email;
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     }

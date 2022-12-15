@@ -1,0 +1,33 @@
+<template>
+  <div class="slds-var-p-around_x-small">
+    <lightning-input
+      type="text"
+      label="Enter login"
+      name="login"
+      value={formData.login}
+      onchange={handleInput}
+      required
+    ></lightning-input>
+  </div>
+  <div class="slds-var-p-around_x-small">
+    <lightning-input
+      type="text"
+      label="Enter password"
+      name="password"
+      value={formData.password}
+      onchange={handleInput}
+      required
+    ></lightning-input>
+  </div>
+  <div class="slds-var-p-around_x-small">
+    <lightning-button
+      variant="brand"
+      label="Login"
+      onclick={handleLoginBtnClick}
+      title="Login"
+      disabled={btnIsDisabled}
+    ></lightning-button>
+
+    <span class="slds-text-color_error">{error}</span>
+  </div>
+</template>

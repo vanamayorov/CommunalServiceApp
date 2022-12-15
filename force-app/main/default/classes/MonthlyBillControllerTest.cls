@@ -63,14 +63,16 @@ private class MonthlyBillControllerTest {
 
     Communal_Service_User__c communalUserKharkiv = new Communal_Service_User__c(
       User__c = userKharkiv.Id,
-      Email__c = 'communaluser@gmail.com',
-      City__c = kharkivCity.Id
+      City__c = kharkivCity.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
 
     Communal_Service_User__c communalUserKyiv = new Communal_Service_User__c(
       User__c = userKyiv.Id,
-      Email__c = 'communaluser@gmail.com',
-      City__c = kyivCity.Id
+      City__c = kyivCity.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
     insert new List<Communal_Service_User__c>{
       communalUserKharkiv,

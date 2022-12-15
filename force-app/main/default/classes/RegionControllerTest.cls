@@ -77,10 +77,11 @@ private class RegionControllerTest {
 
     Communal_Service_User__c communalUser = new Communal_Service_User__c(
       User__c = user.Id,
-      Email__c = 'communaluser@gmail.com',
       Region_Manager__c = regKharkivManager.Id,
       Region__c = kharkivRegion.Id,
-      City__c = kharkivCity.Id
+      City__c = kharkivCity.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
 
     insert communalUser;

@@ -100,10 +100,11 @@ private class CommunalUserTriggerTest {
 
     Communal_Service_User__c communalUser = new Communal_Service_User__c(
       User__c = user.Id,
-      Email__c = 'communaluserkyiv@gmail.com',
       Region_Manager__c = regKyivManager.Id,
       Region__c = kyivRegion.Id,
-      City__c = kyivCity.Id
+      City__c = kyivCity.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
 
     insert communalUser;
@@ -127,10 +128,11 @@ private class CommunalUserTriggerTest {
     City__c city = [SELECT Id, Name FROM City__c WHERE Name = 'Kyiv' LIMIT 1];
     Communal_Service_User__c communalUser = new Communal_Service_User__c(
       User__c = user.Id,
-      Email__c = 'communaluser@gmail.com',
       Region_Manager__c = regKharkivManager.Id,
       Region__c = regKharkivManager.Region__c,
-      City__c = city.Id
+      City__c = city.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
     insert communalUser;
 
@@ -156,18 +158,19 @@ private class CommunalUserTriggerTest {
         LIMIT 1
       ];
       Region_Manager__c regKharkivManager = [
-        SELECT Id, Email__c, Region__c
+        SELECT Id, Region__r.Name, Region__c
         FROM Region_Manager__c
-        WHERE Email__c = 'kharkivmanager@gmail.com'
+        WHERE Region__r.Name = 'Kharkiv Oblast'
         LIMIT 1
       ];
       City__c city = [SELECT Id, Name FROM City__c WHERE Name = 'Kyiv' LIMIT 1];
       Communal_Service_User__c communalUser = new Communal_Service_User__c(
         User__c = user.Id,
-        Email__c = 'communaluser@gmail.com',
         Region_Manager__c = regKharkivManager.Id,
         Region__c = regKharkivManager.Region__c,
-        City__c = city.Id
+        City__c = city.Id,
+        Password__c = '123',
+        Login__c = '123'
       );
       insert communalUser;
 
@@ -188,9 +191,9 @@ private class CommunalUserTriggerTest {
   static void deleteUserTest() {
     Test.startTest();
     Communal_Service_User__c communalUser = [
-      SELECT Id, Email__c
+      SELECT Id, City__r.Name
       FROM Communal_Service_User__c
-      WHERE Email__c = 'communaluserkyiv@gmail.com'
+      WHERE City__r.Name = 'Kyiv'
       LIMIT 1
     ];
 
