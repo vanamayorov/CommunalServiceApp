@@ -80,7 +80,7 @@ export default class RegisterForm extends LightningElement {
 
     this.formData = {
       ...this.formData,
-      [key]: e.target.value
+      [key]: e.target.value.trim()
     };
 
     this.validateInputs();

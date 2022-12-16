@@ -99,7 +99,7 @@ private class PaymentControllerTest {
     Monthly_Bill__c monthlyBill = [
       SELECT Id, Communal_Service_User__r.User__r.Email
       FROM Monthly_Bill__c
-      WHERE Communal_Service_User__r.User__r.Email = 'communaluser@gmail.com'
+      WHERE Communal_Service_User__r.User__r.Email = 'test@gmail.com'
       LIMIT 1
     ];
     Map<String, String> payloadMap = new Map<String, String>{
