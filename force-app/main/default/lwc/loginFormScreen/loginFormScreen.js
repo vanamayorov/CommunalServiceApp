@@ -1,5 +1,6 @@
 import { LightningElement } from "lwc";
 import login from "@salesforce/apex/LoginController.login";
+import verifyUserIsAuthorized from "@salesforce/apex/LoginController.verifyUserIsAuthorized";
 import Id from "@salesforce/user/Id";
 
 export default class LoginFormScreen extends LightningElement {
@@ -24,6 +25,9 @@ export default class LoginFormScreen extends LightningElement {
 
   handleLoginBtnClick() {
     login({ payload: JSON.stringify(this.formData) })
+      .then(() => {
+        return verifyUserIsAuthorized({ userId: Id });
+      })
       .then(() => {
         window.location.reload();
       })

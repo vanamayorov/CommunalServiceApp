@@ -35,4 +35,15 @@ public with sharing class LoginController {
       throw new CustomException(e.getMessage());
     }
   }
+
+  @AuraEnabled
+  public static Boolean verifyUserIsAuthorized(String userId) {
+    try {
+      return AuthorizedUserPermissionSetController.userIsAssignedToPermissionSet(
+        userId
+      );
+    } catch (Exception e) {
+      throw new CustomException(e.getMessage());
+    }
+  }
 }
