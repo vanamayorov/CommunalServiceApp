@@ -1,0 +1,54 @@
+<template>
+  <div class="slds-var-p-around_x-small">
+    <lightning-input
+      type="text"
+      label="Enter login"
+      name="login"
+      onchange={handleInput}
+      value={formData.login}
+      required
+    ></lightning-input>
+  </div>
+  <div class="slds-var-p-around_x-small">
+    <lightning-input
+      type="text"
+      label="Enter password"
+      name="password"
+      onchange={handleInput}
+      value={formData.password}
+      required
+    ></lightning-input>
+  </div>
+  <div class="slds-var-p-around_x-small">
+    <lightning-combobox
+      name="regionId"
+      label="Choose region"
+      value={formData.regionId}
+      placeholder="Select Region"
+      options={regionsOptions}
+      onchange={handleChangeRegion}
+      required
+    ></lightning-combobox>
+    <lightning-combobox
+      if:true={formData.regionId}
+      name="cityId"
+      label="Choose city"
+      value={formData.cityId}
+      placeholder="Select City"
+      options={cities}
+      onchange={handleChangeCity}
+      required
+    >
+    </lightning-combobox>
+  </div>
+  <div class="slds-var-p-around_x-small">
+    <lightning-button
+      variant="brand"
+      label="Register"
+      title="Primary action"
+      onclick={handleRegisterBtnClick}
+      disabled={registerBtnIsDisabled}
+    ></lightning-button>
+    <span class="slds-text-color_error">{error}</span>
+  </div>
+</template>

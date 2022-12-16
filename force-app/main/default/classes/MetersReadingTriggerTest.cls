@@ -46,8 +46,9 @@ private class MetersReadingTriggerTest {
 
     Communal_Service_User__c communalUserKharkiv = new Communal_Service_User__c(
       User__c = userKharkiv.Id,
-      Email__c = 'communaluser@gmail.com',
-      City__c = kharkivCity.Id
+      City__c = kharkivCity.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
 
     insert communalUserKharkiv;
@@ -57,9 +58,9 @@ private class MetersReadingTriggerTest {
   static void insertMetersReadingsTest() {
     Test.startTest();
     Communal_Service_User__c communalUserKharkiv = [
-      SELECT Id, Email__c
+      SELECT Id, City__r.Name
       FROM Communal_Service_User__c
-      WHERE Email__c = 'communaluser@gmail.com'
+      WHERE City__r.Name = 'Kharkiv'
       LIMIT 1
     ];
     Meters_Reading__c metersReadingsKharkivUser = new Meters_Reading__c(

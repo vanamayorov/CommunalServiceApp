@@ -57,8 +57,9 @@ private class UserDebtNotificationControllerTest {
     Communal_Service_User__c communalUser = new Communal_Service_User__c(
       User__c = user.Id,
       Region__c = kharkivRegion.Id,
-      Email__c = 'communaluser@gmail.com',
-      City__c = kharkivCity.Id
+      City__c = kharkivCity.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
     insert communalUser;
 

@@ -64,10 +64,11 @@ private class EmailServiceTest {
 
     Communal_Service_User__c communalUser = new Communal_Service_User__c(
       User__c = user.Id,
-      Email__c = 'communaluser@gmail.com',
       Region_Manager__c = regKharkivManager.Id,
       Region__c = kharkivRegion.Id,
-      City__c = kharkivCity.Id
+      City__c = kharkivCity.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
 
     insert communalUser;
@@ -77,16 +78,16 @@ private class EmailServiceTest {
   static void sendEmailTest() {
     Test.startTest();
     Communal_Service_User__c communalUser = [
-      SELECT Id, Email__c, Region_Manager__r.Email__c
+      SELECT Id, Region_Manager__r.Email__c, City__r.Name, User__r.Email
       FROM Communal_Service_User__c
-      WHERE Email__c = 'communaluser@gmail.com'
+      WHERE City__r.Name = 'Kharkiv'
       LIMIT 1
     ];
 
     String subject = 'TEST SUBJECT';
     String message = 'TEST MESSAGE';
     List<Messaging.SendEmailResult> res = EmailService.sendEmail(
-      communalUser.Email__c,
+      communalUser.User__r.Email,
       communalUser.Region_Manager__r.Email__c,
       subject,
       message

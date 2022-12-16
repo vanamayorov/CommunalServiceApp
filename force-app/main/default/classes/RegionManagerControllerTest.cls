@@ -52,8 +52,9 @@ private class RegionManagerControllerTest {
 
     Communal_Service_User__c communalUser = new Communal_Service_User__c(
       User__c = user.Id,
-      Email__c = 'communaluser@gmail.com',
-      Region_Manager__c = regManager.Id
+      Region_Manager__c = regManager.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
 
     insert communalUser;
@@ -63,9 +64,9 @@ private class RegionManagerControllerTest {
   static void getRegionManagerByUserIdTestPositive() {
     Test.startTest();
     Communal_Service_User__c communalUser = [
-      SELECT Id, User__c, Email__c, Region_Manager__r.Email__c
+      SELECT Id, User__c, Region_Manager__r.Email__c, User__r.Email
       FROM Communal_Service_User__c
-      WHERE Email__c = 'communaluser@gmail.com'
+      WHERE Region_Manager__r.Email__c = 'testmanager@gmail.com'
       LIMIT 1
     ];
     Communal_Service_User__c userWithManager = RegionManagerController.getRegionManagerByUserId(
@@ -75,7 +76,6 @@ private class RegionManagerControllerTest {
       communalUser.Region_Manager__r.Email__c,
       userWithManager.Region_Manager__r.Email__c
     );
-    System.assertEquals(communalUser.Email__c, userWithManager.Email__c);
     Test.stopTest();
   }
 
@@ -103,16 +103,16 @@ private class RegionManagerControllerTest {
   static void contactManagerTestPositive() {
     Test.startTest();
     Communal_Service_User__c communalUser = [
-      SELECT Id, Email__c, Region_Manager__r.Email__c, User__c
+      SELECT Id, Region_Manager__r.Email__c, User__c, User__r.Email
       FROM Communal_Service_User__c
-      WHERE Email__c = 'communaluser@gmail.com'
+      WHERE Region_Manager__r.Email__c = 'testmanager@gmail.com'
       LIMIT 1
     ];
     Map<String, String> payloadMap = new Map<String, String>{
       'managerEmail' => communalUser.Region_Manager__r.Email__c,
       'message' => 'test message',
       'subject' => 'test subject',
-      'userEmail' => communalUser.Email__c
+      'userEmail' => communalUser.User__r.Email
     };
     Map<String, Boolean> res = RegionManagerController.contactManager(
       JSON.serialize(payloadMap)
@@ -126,16 +126,16 @@ private class RegionManagerControllerTest {
     try {
       Test.startTest();
       Communal_Service_User__c communalUser = [
-        SELECT Id, Email__c, Region_Manager__r.Email__c, User__c
+        SELECT Id, Region_Manager__r.Email__c, User__r.Email
         FROM Communal_Service_User__c
-        WHERE Email__c = 'communaluser@gmail.com'
+        WHERE Region_Manager__r.Email__c = 'testmanager@gmail.com'
         LIMIT 1
       ];
       Map<String, String> payloadMap = new Map<String, String>{
         'managerEmail' => '',
         'message' => 'test message',
         'subject' => 'test subject',
-        'userEmail' => communalUser.Email__c
+        'userEmail' => communalUser.User__r.Email
       };
       Map<String, Boolean> res = RegionManagerController.contactManager(
         JSON.serialize(payloadMap)

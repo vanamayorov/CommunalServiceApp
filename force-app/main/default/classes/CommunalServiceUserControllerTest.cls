@@ -89,10 +89,11 @@ private class CommunalServiceUserControllerTest {
 
     Communal_Service_User__c communalUser = new Communal_Service_User__c(
       User__c = user.Id,
-      Email__c = 'communaluser@gmail.com',
       Region_Manager__c = regKharkivManager.Id,
       Region__c = kharkivRegion.Id,
-      City__c = kharkivCity.Id
+      City__c = kharkivCity.Id,
+      Password__c = '123',
+      Login__c = '123'
     );
 
     insert communalUser;
@@ -114,7 +115,7 @@ private class CommunalServiceUserControllerTest {
   static void getUserEmailTestPositive() {
     Test.startTest();
     Communal_Service_User__c user = [
-      SELECT Id, Email__c, User__r.FirstName, User__c
+      SELECT Id, User__r.FirstName, User__c, User__r.Email
       FROM Communal_Service_User__c
       WHERE User__r.FirstName = 'Test User'
       LIMIT 1
@@ -122,7 +123,7 @@ private class CommunalServiceUserControllerTest {
     String actualEmail = CommunalServiceUserController.getUserEmail(
       user.User__c
     );
-    System.assertEquals(user.Email__c, actualEmail);
+    System.assertEquals(user.User__r.Email, actualEmail);
     Test.stopTest();
   }
 
@@ -148,7 +149,7 @@ private class CommunalServiceUserControllerTest {
   static void userHasDebtTestPositive() {
     Test.startTest();
     Communal_Service_User__c user = [
-      SELECT Id, Email__c, User__r.FirstName, User__c
+      SELECT Id, User__r.FirstName, User__c
       FROM Communal_Service_User__c
       WHERE User__r.FirstName = 'Test User'
       LIMIT 1
@@ -185,7 +186,7 @@ private class CommunalServiceUserControllerTest {
   static void getUnpaidMonthlyBillsTestPositive() {
     Test.startTest();
     Communal_Service_User__c user = [
-      SELECT Id, Email__c, User__r.FirstName, User__c
+      SELECT Id, User__r.FirstName, User__c
       FROM Communal_Service_User__c
       WHERE User__r.FirstName = 'Test User'
       LIMIT 1

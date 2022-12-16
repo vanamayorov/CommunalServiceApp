@@ -1,0 +1,32 @@
+<template>
+  <div class="slds-card slds-p-top_medium">
+    <div class="slds-grid slds-grid_align-center">
+      <lightning-button-group>
+        <lightning-button
+          if:true={isLoginFormVisible}
+          label="Login"
+          variant="brand"
+          onclick={handleLoginBtnClick}
+        ></lightning-button>
+        <lightning-button
+          if:false={isLoginFormVisible}
+          label="Login"
+          onclick={handleLoginBtnClick}
+        ></lightning-button>
+        <lightning-button
+          if:false={isLoginFormVisible}
+          label="Register"
+          variant="brand"
+          onclick={handleRegisterBtnClick}
+        ></lightning-button>
+        <lightning-button
+          if:true={isLoginFormVisible}
+          label="Register"
+          onclick={handleRegisterBtnClick}
+        ></lightning-button>
+      </lightning-button-group>
+    </div>
+    <c-login-form-screen if:true={isLoginFormVisible}></c-login-form-screen>
+    <c-register-form if:false={isLoginFormVisible}></c-register-form>
+  </div>
+</template>

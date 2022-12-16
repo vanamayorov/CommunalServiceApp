@@ -35,7 +35,7 @@ export default class ContactManagerModal extends LightningModal {
         this.contactData = {
           ...this.contactData,
           managerEmail: res.Region_Manager__r.Email__c,
-          userEmail: res.Email__c
+          userEmail: res.User__r.Email
         };
       })
       .catch((err) => this.closeModal({ status: "failed", error: err }));
