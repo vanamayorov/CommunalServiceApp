@@ -11,8 +11,8 @@ import Id from "@salesforce/user/Id";
 
 const COLUMNS = [
   { label: "Id", fieldName: "id" },
-  { label: "Month", fieldName: "month" },
-  { label: "Year", fieldName: "year" },
+  { label: "Bill's Month", fieldName: "month" },
+  { label: "Bill's Year", fieldName: "year" },
   { label: "Amount", fieldName: "amount" },
   { label: "Date", fieldName: "date" },
   { label: "Status", fieldName: "status" }
@@ -23,6 +23,9 @@ export default class PaymentList extends LightningElement {
   subscription = null;
   isLoading = true;
   data = [];
+  currentPage = 0;
+  numOfDisplay = 10;
+  maxPages = 0;
 
   connectedCallback() {
     this.fetchPayments();
@@ -45,7 +48,8 @@ export default class PaymentList extends LightningElement {
     getPayments({ userId: Id })
       .then((data) => {
         this.data = data.map((payment) => ({
-          id: `/lightning/r/Payment__c/${payment.Id}/view`,
+          id: payment.Id,
+          link: `/lightning/r/Payment__c/${payment.Id}/view`,
           month: payment.Monthly_Bill__r.Month__c,
           year: payment.Monthly_Bill__r.Year__c,
           amount: payment.Amount__c,
@@ -53,6 +57,7 @@ export default class PaymentList extends LightningElement {
           date: getFormattedTime(payment.Date__c),
           status: payment.Status__c
         }));
+        this.maxPages = Math.ceil(this.data.length / this.numOfDisplay);
       })
       .catch(() => {
         this.data = [];
@@ -62,8 +67,31 @@ export default class PaymentList extends LightningElement {
       });
   }
 
+  handleNextPage() {
+    this.currentPage++;
+  }
+
+  handlePrevPage() {
+    this.currentPage--;
+  }
+
   disconnectedCallback() {
     unsubscribe(this.subscription);
+  }
+
+  get getPaymentsByPage() {
+    return this.data.slice(
+      this.currentPage * this.numOfDisplay,
+      this.currentPage * this.numOfDisplay + this.numOfDisplay
+    );
+  }
+
+  get isNextPageFinal() {
+    return this.currentPage + 1 >= this.maxPages;
+  }
+
+  get isPrevPageZero() {
+    return this.currentPage - 1 < 0;
   }
 
   get paymentsListIsFilled() {

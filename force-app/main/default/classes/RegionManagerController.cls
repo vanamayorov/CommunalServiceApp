@@ -4,20 +4,30 @@ public with sharing class RegionManagerController {
     String userId
   ) {
     try {
-      return [
+      List<Communal_Service_User__c> usersList = [
         SELECT Id, User__c, Region_Manager__r.Email__c, Email__c
         FROM Communal_Service_User__c
         WHERE User__c = :userId
-        LIMIT 1
       ];
+
+      if (usersList.isEmpty()) {
+        throw new CustomException(
+          'Communal Service User with userId: ' +
+          userId +
+          ' was not found'
+        );
+      }
+
+      return usersList[0];
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     }
   }
 
   @AuraEnabled
-  public static void contactManager(String payload) {
+  public static Map<String, Boolean> contactManager(String payload) {
     try {
+      Boolean emailSentSuccessfully = true;
       Map<String, Object> payloadMap = (Map<String, Object>) JSON.deserializeUntyped(
         payload
       );
@@ -25,7 +35,18 @@ public with sharing class RegionManagerController {
       String message = (String) payloadMap.get('message');
       String subject = (String) payloadMap.get('subject');
       String userEmail = (String) payloadMap.get('userEmail');
-      EmailService.sendEmail(userEmail, managerEmail, subject, message);
+      List<Messaging.SendEmailResult> emailsRes = EmailService.sendEmail(
+        userEmail,
+        managerEmail,
+        subject,
+        message
+      );
+      for (Messaging.SendEmailResult res : emailsRes) {
+        emailSentSuccessfully = emailSentSuccessfully && res.success;
+      }
+      return new Map<String, Boolean>{
+        'sentSuccessfully' => emailSentSuccessfully
+      };
     } catch (Exception e) {
       throw new CustomException(e.getMessage());
     }

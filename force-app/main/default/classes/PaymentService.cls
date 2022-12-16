@@ -60,6 +60,6 @@ public with sharing class PaymentService {
       return true;
     }
 
-    throw new CustomException('Not enough measures on a card balance');
+    throw new CustomException('Not enough measures on a card balance.');
   }
 }
